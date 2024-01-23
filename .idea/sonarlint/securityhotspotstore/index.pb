@@ -9,3 +9,5 @@ V
 &src/main/java/chess/ChessPosition.java,1/2/12180158e3ed9f2b7cf9588a38f33fca071ee26a
 m
 =src/test/java/passoffTests/chessTests/ChessPositionTests.java,a/7/a76dd7b78b647af499d2f990a912556e28c031c9
+R
+"src/main/java/chess/ChessMove.java,4/2/429c55da8253d8ee02138d80d1951c5e7d4a468c

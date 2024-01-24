@@ -11,3 +11,5 @@ m
 =src/test/java/passoffTests/chessTests/ChessPositionTests.java,a/7/a76dd7b78b647af499d2f990a912556e28c031c9
 R
 "src/main/java/chess/ChessMove.java,4/2/429c55da8253d8ee02138d80d1951c5e7d4a468c
+R
+"src/main/java/chess/ChessGame.java,7/3/73bf4fdc57c71c6f70f600b9fea515a646b27eef

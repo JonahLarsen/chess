@@ -1,5 +1,8 @@
 
 Y
-java:S11724"<Remove these unused method parameters "board", "myPosition".(°å†8ªÔŠÅÓ1
-H
-java:S11685"+Return an empty collection instead of null.(¥¹ï8­ÔŠÅÓ1
+java:S11726"<Remove these unused method parameters "board", "myPosition".(°å†8¢øëÓ1
+D	java:S1089")Either remove or fill this block of code.(ÌèıE8¢øëÓ1
+J	java:S108A")Either remove or fill this block of code.(Ä£ø³ûÿÿÿÿ8¢øëÓ1
+J	java:S108C")Either remove or fill this block of code.(ÌÄ¡æıÿÿÿÿ8¢øëÓ1
+E	java:S108E")Either remove or fill this block of code.(¨ÖË†8‘¢øëÓ1
+E	java:S108G")Either remove or fill this block of code.(ŞÇ™ú8‘¢øëÓ1

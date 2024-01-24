@@ -45,6 +45,9 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
+        if (chessBoard[position.getRow()][position.getColumn()] == null) {
+            return null;
+        }
         return chessBoard[position.getRow() - 1][position.getColumn() - 1];
     }
 
@@ -203,7 +206,7 @@ public class ChessBoard {
         System.out.println("BEGIN");
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                System.out.print(this.chessBoard[i][j].getTeamColor() + "\s\s");
+                System.out.print(this.chessBoard[i][j] + "\s\s");
             }
             System.out.println("");
         }

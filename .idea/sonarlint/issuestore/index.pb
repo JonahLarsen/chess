@@ -1,19 +1,3 @@
 
-R
-"src/main/java/chess/ChessMove.java,4/2/429c55da8253d8ee02138d80d1951c5e7d4a468c
-V
-&src/main/java/chess/ChessPosition.java,1/2/12180158e3ed9f2b7cf9588a38f33fca071ee26a
-y
-Isrc/test/java/passoffTests/chessTests/chessPieceTests/QueenMoveTests.java,6/f/6fcaede35267e7775e58c69043350c168133442f
-R
-"src/main/java/chess/ChessGame.java,7/3/73bf4fdc57c71c6f70f600b9fea515a646b27eef
-x
-Hsrc/test/java/passoffTests/chessTests/chessPieceTests/KingMoveTests.java,c/8/c8fdb66b0b2fbf354a13043e7235ba7f1b490c86
-z
-Jsrc/test/java/passoffTests/chessTests/chessPieceTests/BishopMoveTests.java,9/f/9fb65546328f069cf6edf1e93fa07b7ce2352f4c
 S
 #src/main/java/chess/ChessPiece.java,8/5/85a88ea4958ed1b3e2cc2a545a3ad992329e985a
-j
-:src/test/java/passoffTests/chessTests/ChessBoardTests.java,9/e/9ebbbe5f2ab3f28e0d91b1a3e330d1f6d319c142
-S
-#src/main/java/chess/ChessBoard.java,1/3/139d0d4bb2b8e11a4e03dbed5b694452387fb52a

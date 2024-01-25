@@ -1,8 +1,9 @@
 
-Y
-java:S11726"<Remove these unused method parameters "board", "myPosition".(°å†8¢øëÓ1
-D	java:S1089")Either remove or fill this block of code.(ÌèıE8¢øëÓ1
-J	java:S108A")Either remove or fill this block of code.(Ä£ø³ûÿÿÿÿ8¢øëÓ1
-J	java:S108C")Either remove or fill this block of code.(ÌÄ¡æıÿÿÿÿ8¢øëÓ1
-E	java:S108E")Either remove or fill this block of code.(¨ÖË†8‘¢øëÓ1
-E	java:S108G")Either remove or fill this block of code.(ŞÇ™ú8‘¢øëÓ1
+W
+java:S1854=":Remove this useless assignment to local variable "spaces".(¥â¹ø8Àß‡îÓ1
+I
+java:S11726",Remove this unused method parameter "board".(°å†8Áß‡îÓ1
+N
+java:S14819",Remove this unused "canMove" local variable.(™¼¨Ğøÿÿÿÿ8Áß‡îÓ1
+H
+java:S1481="+Remove this unused "spaces" local variable.(¥â¹ø8Âß‡îÓ1

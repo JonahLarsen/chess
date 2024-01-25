@@ -1,5 +1,6 @@
 package chess;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -56,6 +57,8 @@ public class ChessPiece {
         return kingPieceMoves(board, myPosition);
       } else if (this.type == PieceType.BISHOP) {
         return bishopPieceMoves(board, myPosition);
+      } else if (this.type == PieceType.ROOK) {
+        return rookPieceMoves(board, myPosition);
       }
 
       return null;
@@ -163,6 +166,60 @@ public class ChessPiece {
       }
 
       return validMoves;
+    }
+
+    public Collection<ChessMove> rookPieceMoves(ChessBoard board, ChessPosition myPosition) {
+      ArrayList<ChessMove> validMoves = new ArrayList<>();
+      //Up
+      ChessPosition tempPosition = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn());
+      while (tempPosition.getRow() <= 8) {
+        if (board.getPiece(tempPosition) == null || board.getPiece(tempPosition).getTeamColor() != this.getTeamColor()) {
+          validMoves.add(new ChessMove(myPosition, tempPosition, null));
+          if (board.getPiece(tempPosition) != null && board.getPiece(tempPosition).getTeamColor() != this.getTeamColor()) {
+            break;
+          }
+          tempPosition = new ChessPosition(tempPosition.getRow() + 1, tempPosition.getColumn());
+        } else {break;}
+      }
+      //Down
+      tempPosition = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn());
+      while (tempPosition.getRow() >= 1) {
+        if (board.getPiece(tempPosition) == null || board.getPiece(tempPosition).getTeamColor() != this.getTeamColor()) {
+          validMoves.add(new ChessMove(myPosition, tempPosition, null));
+          if (board.getPiece(tempPosition) != null && board.getPiece(tempPosition).getTeamColor() != this.getTeamColor()) {
+            break;
+          }
+          tempPosition = new ChessPosition(tempPosition.getRow() - 1, tempPosition.getColumn());
+        } else {break;}
+      }
+      //Left
+      tempPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn() - 1);
+      while (tempPosition.getColumn() >= 1) {
+        if (board.getPiece(tempPosition) == null || board.getPiece(tempPosition).getTeamColor() != this.getTeamColor()) {
+          validMoves.add(new ChessMove(myPosition, tempPosition, null));
+          if (board.getPiece(tempPosition) != null && board.getPiece(tempPosition).getTeamColor() != this.getTeamColor()) {
+            break;
+          }
+          tempPosition = new ChessPosition(tempPosition.getRow(), tempPosition.getColumn() - 1);
+        } else {break;}
+      }
+      //Right
+      tempPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn() + 1);
+      while (tempPosition.getColumn() <= 8) {
+        if (board.getPiece(tempPosition) == null || board.getPiece(tempPosition).getTeamColor() != this.getTeamColor()) {
+          validMoves.add(new ChessMove(myPosition, tempPosition, null));
+          if (board.getPiece(tempPosition) != null && board.getPiece(tempPosition).getTeamColor() != this.getTeamColor()) {
+            break;
+          }
+          tempPosition = new ChessPosition(tempPosition.getRow(), tempPosition.getColumn() + 1);
+        } else {break;}
+      }
+      return validMoves;
+    }
+
+    public Collection<ChessMove> queenPieceMoves(ChessBoard board, ChessPosition myPosition) {
+      ArrayList<ChessMove> validMoves = new ArrayList<>();
+      validMoves.addAll()
     }
 
 

@@ -75,8 +75,44 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition ourKingLocation = getKingPieceLocation(teamColor);
+        ChessPiece tempPiece;
+        Collection<ChessMove> tempPieceMoves;
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                tempPiece = this.board.getPiece(new ChessPosition(i, j));
+                if (tempPiece != null && tempPiece.getTeamColor() != teamColor) {
+                    tempPieceMoves = tempPiece.pieceMoves(this.board, new ChessPosition(i, j));
+                    for (ChessMove move : tempPieceMoves) {
+                        if (move.getEndPosition().equals(ourKingLocation)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
+
+    public ChessPosition getKingPieceLocation(TeamColor teamColor) {
+        ChessPiece tempPiece;
+        ChessPosition tempPosition;
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                tempPosition = new ChessPosition(i, j);
+                if (this.board.getPiece(tempPosition) != null) {
+                    tempPiece = new ChessPiece(this.board.getPiece(tempPosition).getTeamColor(), this.board.getPiece(tempPosition).getPieceType());
+                    if (tempPiece.getTeamColor() == teamColor && tempPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                        return tempPosition;
+
+                    }
+                }
+
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Determines if the given team is in checkmate

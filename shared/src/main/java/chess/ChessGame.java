@@ -102,7 +102,7 @@ public class ChessGame {
     }
 
     public boolean isInCheckTempBoard(TeamColor teamColor, ChessBoard board) {
-        ChessPosition ourKingLocation = getKingPieceLocation(teamColor);
+        ChessPosition ourKingLocation = getKingPieceLocation(teamColor, board);
         ChessPiece tempPiece;
         Collection<ChessMove> tempPieceMoves;
         for (int i = 1; i <= 8; i++) {
@@ -121,14 +121,14 @@ public class ChessGame {
         return false;
     }
 
-    public ChessPosition getKingPieceLocation(TeamColor teamColor) {
+    public ChessPosition getKingPieceLocation(TeamColor teamColor, ChessBoard board) {
         ChessPiece tempPiece;
         ChessPosition tempPosition;
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 tempPosition = new ChessPosition(i, j);
-                if (this.board.getPiece(tempPosition) != null) {
-                    tempPiece = new ChessPiece(this.board.getPiece(tempPosition).getTeamColor(), this.board.getPiece(tempPosition).getPieceType());
+                if (board.getPiece(tempPosition) != null) {
+                    tempPiece = new ChessPiece(board.getPiece(tempPosition).getTeamColor(), board.getPiece(tempPosition).getPieceType());
                     if (tempPiece.getTeamColor() == teamColor && tempPiece.getPieceType() == ChessPiece.PieceType.KING) {
                         return tempPosition;
 

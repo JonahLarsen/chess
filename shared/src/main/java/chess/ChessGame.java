@@ -30,7 +30,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+
     }
 
     /**
@@ -88,7 +88,14 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-
+        ChessPosition movePosition = move.getStartPosition();
+        Collection<ChessMove> validMovePositions = validMoves(movePosition);
+        if (validMovePositions.contains(move)) {
+            this.board.addPiece(move.getEndPosition(), this.board.getPiece(move.getStartPosition()));
+            this.board.addPiece(move.getStartPosition(), null);
+        } else {
+            throw new InvalidMoveException();
+        }
     }
 
     /**

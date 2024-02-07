@@ -50,12 +50,35 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = this.board.getPiece(startPosition);
-        if (piece == null) {
-            return null;
-        } else {
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
+        ChessBoard tempBoard;
+        if (piece != null) {
             Collection<ChessMove> possibleMoves = piece.pieceMoves(this.board, startPosition);
+            for (ChessMove move : possibleMoves) {
+                tempBoard = makeBoardCopy(this.board);
+                tempBoard.addPiece(move.getEndPosition(), tempBoard.getPiece(startPosition));
+                tempBoard.addPiece(startPosition, null);
+                if (!isInCheckTempBoard(piece.getTeamColor(), tempBoard)) {
+                    validMoves.add(move);
+                }
+            }
+            return validMoves;
         }
-        return null; //Change
+        return null;
+    }
+
+    public ChessBoard makeBoardCopy(ChessBoard board) {
+        ChessBoard copyBoard = new ChessBoard();
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                if (board.getPiece(new ChessPosition(i, j)) != null) {
+                    TeamColor pieceColor = board.getPiece(new ChessPosition(i, j)).getTeamColor();
+                    ChessPiece.PieceType pieceType = board.getPiece(new ChessPosition(i, j)).getPieceType();
+                    copyBoard.addPiece(new ChessPosition(i, j), new ChessPiece(pieceColor, pieceType));
+                }
+            }
+        }
+        return copyBoard;
     }
 
     /**
@@ -65,7 +88,7 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+
     }
 
     /**
@@ -75,14 +98,18 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        return isInCheckTempBoard(teamColor, this.board);
+    }
+
+    public boolean isInCheckTempBoard(TeamColor teamColor, ChessBoard board) {
         ChessPosition ourKingLocation = getKingPieceLocation(teamColor);
         ChessPiece tempPiece;
         Collection<ChessMove> tempPieceMoves;
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
-                tempPiece = this.board.getPiece(new ChessPosition(i, j));
+                tempPiece = board.getPiece(new ChessPosition(i, j));
                 if (tempPiece != null && tempPiece.getTeamColor() != teamColor) {
-                    tempPieceMoves = tempPiece.pieceMoves(this.board, new ChessPosition(i, j));
+                    tempPieceMoves = tempPiece.pieceMoves(board, new ChessPosition(i, j));
                     for (ChessMove move : tempPieceMoves) {
                         if (move.getEndPosition().equals(ourKingLocation)) {
                             return true;

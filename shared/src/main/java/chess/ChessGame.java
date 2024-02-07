@@ -90,7 +90,24 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         Collection<ChessMove> validMovePositions = validMoves(move.getStartPosition());
         if (validMovePositions.contains(move) && this.board.getPiece(move.getStartPosition()).getTeamColor() == this.turn) {
-            this.board.addPiece(move.getEndPosition(), this.board.getPiece(move.getStartPosition()));
+            if (move.getPromotionPiece() == null) {
+                this.board.addPiece(move.getEndPosition(), this.board.getPiece(move.getStartPosition()));
+            } else {
+                switch(move.getPromotionPiece()) {
+                    case QUEEN:
+                        this.board.addPiece(move.getEndPosition(), new ChessPiece(this.turn, ChessPiece.PieceType.QUEEN));
+                        break;
+                    case ROOK:
+                        this.board.addPiece(move.getEndPosition(), new ChessPiece(this.turn, ChessPiece.PieceType.ROOK));
+                        break;
+                    case BISHOP:
+                        this.board.addPiece(move.getEndPosition(), new ChessPiece(this.turn, ChessPiece.PieceType.BISHOP));
+                        break;
+                    case KNIGHT:
+                        this.board.addPiece(move.getEndPosition(), new ChessPiece(this.turn, ChessPiece.PieceType.KNIGHT));
+                        break;
+                }
+            }
             this.board.addPiece(move.getStartPosition(), null);
         } else {
             throw new InvalidMoveException();

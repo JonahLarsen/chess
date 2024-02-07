@@ -21,7 +21,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        return turn;
+        return this.turn;
     }
 
     /**
@@ -30,7 +30,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        turn = team;
+        this.turn = team;
     }
 
     /**
@@ -88,13 +88,17 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        ChessPosition movePosition = move.getStartPosition();
-        Collection<ChessMove> validMovePositions = validMoves(movePosition);
-        if (validMovePositions.contains(move)) {
+        Collection<ChessMove> validMovePositions = validMoves(move.getStartPosition());
+        if (validMovePositions.contains(move) && this.board.getPiece(move.getStartPosition()).getTeamColor() == this.turn) {
             this.board.addPiece(move.getEndPosition(), this.board.getPiece(move.getStartPosition()));
             this.board.addPiece(move.getStartPosition(), null);
         } else {
             throw new InvalidMoveException();
+        }
+        if (this.turn == TeamColor.BLACK) {
+            this.turn = TeamColor.WHITE;
+        } else {
+            this.turn = TeamColor.BLACK;
         }
     }
 
@@ -110,6 +114,12 @@ public class ChessGame {
 
     public boolean isInCheckTempBoard(TeamColor teamColor, ChessBoard board) {
         ChessPosition ourKingLocation = getKingPieceLocation(teamColor, board);
+
+        //For tests where there is no king on the board
+        if (ourKingLocation == null) {
+            return false;
+        }
+
         ChessPiece tempPiece;
         Collection<ChessMove> tempPieceMoves;
         for (int i = 1; i <= 8; i++) {

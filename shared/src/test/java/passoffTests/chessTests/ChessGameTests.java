@@ -59,6 +59,7 @@ public class ChessGameTests {
                 |K| | | | | | |R|
                 """));
 
+
         //rook
         var rookStartPosition = getNewPosition(1, 8);
         ChessPosition rookEndPosition = getNewPosition(3, 8);

@@ -15,7 +15,7 @@ public class AuthService {
   }
 
   public Collection<AuthData> listAuths() throws DataAccessException {
-    return authDAO.listAuths();
+    return this.authDAO.listAuths();
   }
   public void deleteAllAuth() throws DataAccessException {
     this.authDAO.clear();

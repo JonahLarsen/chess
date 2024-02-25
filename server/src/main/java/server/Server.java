@@ -1,9 +1,12 @@
 package server;
 
+import dataAccess.DataAccessException;
 import service.AuthService;
 import service.GameService;
 import service.UserService;
 import spark.*;
+
+import javax.xml.crypto.Data;
 
 public class Server {
     private final AuthService authService;
@@ -30,11 +33,15 @@ public class Server {
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", this::clearHandler);
         Spark.post("/user", this::registerHandler);
+        Spark.exception(DataAccessException.class, this::exceptionHandler);
 
         Spark.awaitInitialization();
         return Spark.port();
     }
 
+    private void exceptionHandler(DataAccessException e, Request req, Response res) {
+        //TODO
+    }
     private Object clearHandler(Request req, Response res) throws Exception {
         authService.deleteAllAuth();
         userService.deleteAllUsers();

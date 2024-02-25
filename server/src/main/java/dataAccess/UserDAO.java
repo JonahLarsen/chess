@@ -2,13 +2,10 @@ package dataAccess;
 
 import model.UserData;
 
-public class UserDAO {
+public interface UserDAO {
 
-  void insertUser(UserData u) throws DataAccessException {
+  void insertUser(UserData u) throws DataAccessException;
 
-  }
 
-  void clear() throws DataAccessException {
-
-  }
+  void clear() throws DataAccessException;
 }

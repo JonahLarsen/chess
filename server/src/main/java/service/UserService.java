@@ -9,5 +9,6 @@ public class UserService {
   public void logout(UserData user) {}
 
   public void deleteAllUsers() {
+
   }
 }

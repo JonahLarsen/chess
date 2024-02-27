@@ -1,5 +1,6 @@
 package service;
 
+import chess.ChessGame;
 import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
 import model.GameData;
@@ -18,6 +19,9 @@ public class GameService {
     return this.gameDAO.listGames();
   }
 
+  public void joinGame(String color, int gameID) throws DataAccessException {
+    this.gameDAO.joinGame(color, gameID);
+  }
   public int createGame(String gameName) throws DataAccessException {
     return this.gameDAO.createGame(gameName);
   }

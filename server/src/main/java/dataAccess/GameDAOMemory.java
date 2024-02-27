@@ -19,6 +19,13 @@ public class GameDAOMemory implements GameDAO {
     return nextID;
 
   }
+
+  public void joinGame(String color, int gameID) throws DataAccessException {
+    GameData game = this.games.get(gameID);
+    ChessGame chessGame = game.game();
+
+  }
+
   public Collection<GameData> listGames() throws DataAccessException {
     return this.games.values();
   }

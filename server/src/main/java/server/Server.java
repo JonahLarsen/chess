@@ -1,5 +1,6 @@
 package server;
 
+import chess.ChessGame;
 import dataAccess.*;
 import model.AuthData;
 import model.GameData;
@@ -51,6 +52,7 @@ public class Server {
         Spark.delete("/session", this::logoutHandler);
         Spark.get("/game", this::listGamesHandler);
         Spark.post("/game", this::createGameHandler);
+        Spark.put("/game", this::joinGameHandler);
         Spark.exception(DataAccessException.class, this::exceptionHandler);
 
         Spark.awaitInitialization();
@@ -74,6 +76,21 @@ public class Server {
             res.body("{\"message\": \"Error: description\"}");
         }
 
+    }
+    private Object joinGameHandler(Request req, Response res) throws DataAccessException {
+      String authToken = req.headers("authorization");
+      this.authService.getAuth(authToken);
+      int gameID = req.attribute("gameID");
+      String playerColor = req.attribute("playerColor");
+      if (playerColor.isEmpty()) {
+        //TODO: Add player as watcher
+
+      } else if (!playerColor.equals("BLACK") && !playerColor.equals("WHITE")) {
+        throw new DataAccessException("Error", 400);
+      }
+      this.gameService.joinGame(playerColor, gameID);
+      res.status(200);
+      return "{}";
     }
     private Object createGameHandler(Request req, Response res) throws DataAccessException {
       String authToken = req.headers("authorization");

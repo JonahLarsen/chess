@@ -24,6 +24,14 @@ public class AuthDAOMemory implements AuthDAO {
   public void createAuth(AuthData auth) throws DataAccessException {
     this.authTokens.put(auth.authToken(), auth);
   }
+
+  public AuthData getAuth(String authToken) throws DataAccessException {
+    if (this.authTokens.containsKey(authToken)) {
+      return this.authTokens.get(authToken);
+    } else {
+      throw new DataAccessException("Error", 401);
+    }
+  }
   public HashMap<String, AuthData> listAuths() throws DataAccessException {
     return this.authTokens;
   }

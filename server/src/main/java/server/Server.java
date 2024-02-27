@@ -2,14 +2,20 @@ package server;
 
 import dataAccess.*;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import service.AuthService;
 import service.GameService;
+import service.GamesListWrapper;
 import service.UserService;
 import spark.*;
 import com.google.gson.Gson;
 
-import javax.xml.crypto.Data;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import model.GameData;
+
 
 public class Server {
     private final AuthService authService;
@@ -43,6 +49,8 @@ public class Server {
         Spark.post("/user", this::registerHandler);
         Spark.post("/session", this::loginHandler);
         Spark.delete("/session", this::logoutHandler);
+        Spark.get("/game", this::listGamesHandler);
+        Spark.post("/game", this::createGameHandler);
         Spark.exception(DataAccessException.class, this::exceptionHandler);
 
         Spark.awaitInitialization();
@@ -67,6 +75,29 @@ public class Server {
         }
 
     }
+    private Object createGameHandler(Request req, Response res) throws DataAccessException {
+      String authToken = req.headers("authorization");
+      var newGame = new Gson().fromJson(req.body(), GameData.class);
+      if (newGame.gameName() == null) {
+        throw new DataAccessException("Error", 400);
+      } else {
+        this.authService.getAuth(authToken);
+        int gameID = this.gameService.createGame(newGame.gameName());
+        GameData createdGame = new GameData(gameID, null, null, null, null);
+        res.status(200);
+        return new Gson().toJson(createdGame);
+      }
+    }
+    private Object listGamesHandler(Request req, Response res) throws DataAccessException {
+      String authToken = req.headers("authorization");
+      this.authService.getAuth(authToken);
+      Collection<GameData> games =this.gameService.listGames();
+      GamesListWrapper wrappedGames = new GamesListWrapper(games);
+      res.status(200);
+
+      return new Gson().toJson(wrappedGames);
+
+    }
     private Object logoutHandler(Request req, Response res) throws DataAccessException {
       String authToken = req.headers("authorization");
       this.authService.logout(authToken);
@@ -75,10 +106,10 @@ public class Server {
     }
     private Object loginHandler(Request req, Response res) throws DataAccessException {
       var user = new Gson().fromJson(req.body(), UserData.class);
-      AuthData authToken = this.userService.login(user);
-      this.authService.createAuth(authToken);
+      AuthData auth = this.userService.login(user);
+      this.authService.createAuth(auth);
       res.status(200);
-      return new Gson().toJson(authToken);
+      return new Gson().toJson(auth);
     }
     private Object clearHandler(Request req, Response res) throws DataAccessException {
         authService.deleteAllAuth();

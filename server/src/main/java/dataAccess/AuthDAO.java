@@ -12,5 +12,7 @@ public interface AuthDAO{
 
   void deleteAuth(String authToken) throws DataAccessException;
 
+  AuthData getAuth(String authToken) throws DataAccessException;
+
   HashMap<String, AuthData> listAuths() throws DataAccessException;
 }

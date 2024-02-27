@@ -22,6 +22,10 @@ public class AuthService {
   public void logout(String authToken) throws DataAccessException {
     this.authDAO.deleteAuth(authToken);
   }
+
+  public AuthData getAuth(String authToken) throws DataAccessException {
+     return this.authDAO.getAuth(authToken);
+  }
   public HashMap<String, AuthData> listAuths() throws DataAccessException {
     return this.authDAO.listAuths();
   }

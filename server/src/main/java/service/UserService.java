@@ -25,13 +25,16 @@ public class UserService {
     }
 
   }
-  public AuthData login(UserData user) {return null;}
+  public AuthData login(UserData user) {
+
+  }
   public void logout(UserData user) {}
 
   public void createUser(UserData user) throws DataAccessException {
     this.userDAO.createUser(user);
   }
   public UserData getUser(String username) throws DataAccessException {
+
     return this.userDAO.getUser(username);
   }
   public Collection<UserData> listUsers() throws DataAccessException {

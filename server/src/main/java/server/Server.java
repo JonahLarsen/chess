@@ -41,6 +41,7 @@ public class Server {
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", this::clearHandler);
         Spark.post("/user", this::registerHandler);
+        Spark.post("/session", this::loginHandler);
         Spark.exception(DataAccessException.class, this::exceptionHandler);
 
         Spark.awaitInitialization();
@@ -49,7 +50,24 @@ public class Server {
 
     private void exceptionHandler(DataAccessException e, Request req, Response res) {
         res.status(e.getStatusCode());
-        res.body("{\"message\": \"Error: bad request\"}");
+        switch(e.getStatusCode()) {
+          case 400:
+            res.body("{\"message\": \"Error: bad request\"}");
+            break;
+          case 403:
+            res.body("{\"message\": \"Error: already taken\"}");
+            break;
+          default:
+            res.status(500);
+            res.body("{\"message\": \"Error: description\"}");
+        }
+
+    }
+
+    private Object loginHandler(Request req, Response res) throws DataAccessException {
+      var user = new Gson().fromJson(req.body(), UserData.class);
+      AuthData authToken = this.userService.login(user);
+
     }
     private Object clearHandler(Request req, Response res) throws DataAccessException {
         authService.deleteAllAuth();
@@ -62,7 +80,7 @@ public class Server {
     private Object registerHandler(Request req, Response res) throws DataAccessException {
       var newUser = new Gson().fromJson(req.body(), UserData.class);
       if (newUser.username() == null || newUser.password() == null || newUser.email() == null) {
-        throw new DataAccessException()
+        throw new DataAccessException("", 400);
       }
       AuthData auth = this.userService.register(newUser);
       this.authService.createAuth(auth);

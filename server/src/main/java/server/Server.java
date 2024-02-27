@@ -42,6 +42,7 @@ public class Server {
         Spark.delete("/db", this::clearHandler);
         Spark.post("/user", this::registerHandler);
         Spark.post("/session", this::loginHandler);
+        Spark.delete("/session", this::logoutHandler);
         Spark.exception(DataAccessException.class, this::exceptionHandler);
 
         Spark.awaitInitialization();
@@ -54,6 +55,9 @@ public class Server {
           case 400:
             res.body("{\"message\": \"Error: bad request\"}");
             break;
+          case 401:
+            res.body("{\"message\": \"Error: unauthorized\"}");
+            break;
           case 403:
             res.body("{\"message\": \"Error: already taken\"}");
             break;
@@ -63,11 +67,16 @@ public class Server {
         }
 
     }
-
+    private Object logoutHandler(Request req, Response res) throws DataAccessException {
+      var user = new Gson().fromJson(req.body(), UserData.class);
+      this.userService.logout()
+    }
     private Object loginHandler(Request req, Response res) throws DataAccessException {
       var user = new Gson().fromJson(req.body(), UserData.class);
       AuthData authToken = this.userService.login(user);
-
+      this.authService.createAuth(authToken);
+      res.status(200);
+      return new Gson().toJson(authToken);
     }
     private Object clearHandler(Request req, Response res) throws DataAccessException {
         authService.deleteAllAuth();

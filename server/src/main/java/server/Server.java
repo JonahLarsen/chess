@@ -1,6 +1,8 @@
 package server;
 
 import dataAccess.*;
+import model.AuthData;
+import model.UserData;
 import service.AuthService;
 import service.GameService;
 import service.UserService;
@@ -45,11 +47,11 @@ public class Server {
         return Spark.port();
     }
 
-    private Object exceptionHandler(DataAccessException e, Request req, Response res) {
-        //TODO
-        return null;
+    private void exceptionHandler(DataAccessException e, Request req, Response res) {
+        res.status(e.getStatusCode());
+        res.body("{\"message\": \"Error: bad request\"}");
     }
-    private Object clearHandler(Request req, Response res) throws Exception {
+    private Object clearHandler(Request req, Response res) throws DataAccessException {
         authService.deleteAllAuth();
         userService.deleteAllUsers();
         gameService.deleteAllGames();
@@ -57,8 +59,16 @@ public class Server {
         return "{}";
     }
 
-    private Object registerHandler(Request req, Response res) throws Exception {
-        return null;
+    private Object registerHandler(Request req, Response res) throws DataAccessException {
+      var newUser = new Gson().fromJson(req.body(), UserData.class);
+      if (newUser.username() == null || newUser.password() == null || newUser.email() == null) {
+        throw new DataAccessException()
+      }
+      AuthData auth = this.userService.register(newUser);
+      this.authService.createAuth(auth);
+      res.status(200);
+      return new Gson().toJson(auth);
+
     }
     public void stop() {
         Spark.stop();

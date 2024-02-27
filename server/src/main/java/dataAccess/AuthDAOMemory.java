@@ -4,15 +4,19 @@ import model.AuthData;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 public class AuthDAOMemory implements AuthDAO {
-  private final ArrayList<AuthData> authTokens = new ArrayList<>();
+  private final HashMap<String, AuthData> authTokens = new HashMap<>();
 
   public void clear() throws DataAccessException {
     this.authTokens.clear();
   }
 
-  public Collection<AuthData> listAuths() throws DataAccessException {
+  public void createAuth(AuthData auth) throws DataAccessException {
+    this.authTokens.put(auth.authToken(), auth);
+  }
+  public HashMap<String, AuthData> listAuths() throws DataAccessException {
     return this.authTokens;
   }
 

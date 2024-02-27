@@ -5,6 +5,7 @@ import dataAccess.DataAccessException;
 import model.AuthData;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 
 public class AuthService {
@@ -14,7 +15,11 @@ public class AuthService {
     this.authDAO = authDAO;
   }
 
-  public Collection<AuthData> listAuths() throws DataAccessException {
+  public void createAuth(AuthData auth) throws DataAccessException {
+    this.authDAO.createAuth(auth);
+  }
+
+  public HashMap<String, AuthData> listAuths() throws DataAccessException {
     return this.authDAO.listAuths();
   }
   public void deleteAllAuth() throws DataAccessException {

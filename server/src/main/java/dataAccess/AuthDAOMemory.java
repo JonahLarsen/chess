@@ -13,6 +13,14 @@ public class AuthDAOMemory implements AuthDAO {
     this.authTokens.clear();
   }
 
+  public void deleteAuth(String authToken) throws DataAccessException {
+    if (this.authTokens.containsKey(authToken)) {
+      this.authTokens.remove(authToken);
+    } else {
+      throw new DataAccessException("Error", 401);
+    }
+
+  }
   public void createAuth(AuthData auth) throws DataAccessException {
     this.authTokens.put(auth.authToken(), auth);
   }

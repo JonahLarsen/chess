@@ -68,8 +68,10 @@ public class Server {
 
     }
     private Object logoutHandler(Request req, Response res) throws DataAccessException {
-      var user = new Gson().fromJson(req.body(), UserData.class);
-      this.userService.logout()
+      String authToken = req.headers("authorization");
+      this.authService.logout(authToken);
+      res.status(200);
+      return "{}";
     }
     private Object loginHandler(Request req, Response res) throws DataAccessException {
       var user = new Gson().fromJson(req.body(), UserData.class);

@@ -107,7 +107,7 @@ public class Server {
     private Object listGamesHandler(Request req, Response res) throws DataAccessException {
       String authToken = req.headers("authorization");
       this.authService.getAuth(authToken);
-      Collection<GameData> games =this.gameService.listGames();
+      Collection<GameData> games = this.gameService.listGames();
       GamesListWrapper wrappedGames = new GamesListWrapper(games);
       res.status(200);
 

@@ -25,13 +25,15 @@ public class GameDAOMemory implements GameDAO {
       throw new DataAccessException("Error", 400);
     }
     GameData game = this.games.get(gameID);
-    if (color.equals("BLACK") && game.blackUsername() != null) {
+    if (color != null && color.equals("BLACK") && game.blackUsername() != null) {
       throw new DataAccessException("Error", 403);
-    } else if (color.equals("WHITE") && game.whiteUsername() != null) {
+    } else if (color != null && color.equals("WHITE") && game.whiteUsername() != null) {
       throw new DataAccessException("Error", 403);
     }
     ChessGame chessGame = game.game();
-    if (color.equals("BLACK")) {
+    if (color == null) {
+      this.games.replace(gameID, new GameData(gameID, null, null, game.gameName(), chessGame));
+    } else if (color.equals("BLACK")) {
       this.games.replace(gameID, new GameData(gameID, null, username, game.gameName(), chessGame));
     } else if (color.equals("WHITE")) {
       this.games.replace(gameID, new GameData(gameID, username, null, game.gameName(), chessGame));

@@ -11,7 +11,8 @@ import service.GameService;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameServiceTest {
-  static final GameService gameService = new GameService(new GameDAOMemory());
+  static final GameDAOMemory gameDAO = new GameDAOMemory();
+  static final GameService gameService = new GameService(gameDAO);
   static final AuthService authService = new AuthService(new AuthDAOMemory());
 
   @BeforeEach
@@ -51,7 +52,18 @@ public class GameServiceTest {
 
   @Test
   public void testCreateGameNegative() throws DataAccessException {
-    //Again I do too much in my handler with the error checking for createGame so this test is not that great
-    //So I don't know how to make a negative test for this one.
+    assertThrows(DataAccessException.class, ()-> gameService.createGame(null));
+  }
+
+  @Test
+  public void testJoinGamePositive() throws DataAccessException {
+    int gameID = gameService.createGame("chessgame");
+    assertDoesNotThrow(()-> gameService.joinGame("username", "BLACK", gameID));
+  }
+
+  @Test
+  public void testJoinGameNegative() throws DataAccessException {
+    int gameID = gameService.createGame("chess");
+    assertThrows(DataAccessException.class, () -> gameService.joinGame("username", "BLACK", gameID + 5));
   }
 }

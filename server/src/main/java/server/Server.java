@@ -94,15 +94,12 @@ public class Server {
     private Object createGameHandler(Request req, Response res) throws DataAccessException {
       String authToken = req.headers("authorization");
       var newGame = new Gson().fromJson(req.body(), GameData.class);
-      if (newGame.gameName() == null) {
-        throw new DataAccessException("Error", 400);
-      } else {
-        this.authService.getAuth(authToken);
-        int gameID = this.gameService.createGame(newGame.gameName());
-        GameData createdGame = new GameData(gameID, null, null, null, null);
-        res.status(200);
-        return new Gson().toJson(createdGame);
-      }
+      this.authService.getAuth(authToken);
+      int gameID = this.gameService.createGame(newGame.gameName());
+      GameData createdGame = new GameData(gameID, null, null, null, null);
+      res.status(200);
+      return new Gson().toJson(createdGame);
+
     }
     private Object listGamesHandler(Request req, Response res) throws DataAccessException {
       String authToken = req.headers("authorization");

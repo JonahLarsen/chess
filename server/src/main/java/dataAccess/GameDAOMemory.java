@@ -38,11 +38,6 @@ public class GameDAOMemory implements GameDAO {
     } else if (color.equals("WHITE")) {
       this.games.replace(gameID, new GameData(gameID, username, game.blackUsername(), game.gameName(), chessGame));
     }
-
-
-
-
-
   }
 
   public Collection<GameData> listGames() throws DataAccessException {

@@ -23,6 +23,9 @@ public class GameService {
     this.gameDAO.joinGame(username, color, gameID);
   }
   public int createGame(String gameName) throws DataAccessException {
+    if (gameName == null) {
+      throw new DataAccessException("Error", 400);
+    }
     return this.gameDAO.createGame(gameName);
   }
   public void deleteAllGames() throws DataAccessException {

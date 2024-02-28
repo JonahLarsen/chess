@@ -32,11 +32,11 @@ public class GameDAOMemory implements GameDAO {
     }
     ChessGame chessGame = game.game();
     if (color == null) {
-      this.games.replace(gameID, new GameData(gameID, null, null, game.gameName(), chessGame));
+      this.games.replace(gameID, new GameData(gameID, game.whiteUsername(), game.blackUsername(), game.gameName(), chessGame));
     } else if (color.equals("BLACK")) {
-      this.games.replace(gameID, new GameData(gameID, null, username, game.gameName(), chessGame));
+      this.games.replace(gameID, new GameData(gameID, game.whiteUsername(), username, game.gameName(), chessGame));
     } else if (color.equals("WHITE")) {
-      this.games.replace(gameID, new GameData(gameID, username, null, game.gameName(), chessGame));
+      this.games.replace(gameID, new GameData(gameID, username, game.blackUsername(), game.gameName(), chessGame));
     }
 
 

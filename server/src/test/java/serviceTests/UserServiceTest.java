@@ -2,6 +2,7 @@ package serviceTests;
 
 import dataAccess.DataAccessException;
 import dataAccess.UserDAOMemory;
+import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.UserService;
@@ -17,7 +18,8 @@ public class UserServiceTest {
 
   @Test
   void testDeleteAllUsers () throws DataAccessException {
-    //TODO: Add several Users
+    userService.createUser(new UserData("username", "password", "email"));
+    userService.createUser(new UserData("user", "pass", "mail"));
     userService.deleteAllUsers();
     assertEquals(0, userService.listUsers().size());
   }

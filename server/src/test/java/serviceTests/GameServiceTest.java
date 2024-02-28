@@ -17,7 +17,8 @@ public class GameServiceTest {
   }
   @Test
   public void testDeleteAllGames() throws DataAccessException {
-    //TODO: Add Several Games
+    gameService.createGame("Chess Time");
+    gameService.createGame("Chess Time Again");
     gameService.deleteAllGames();
     assertEquals(0, gameService.listGames().size());
   }

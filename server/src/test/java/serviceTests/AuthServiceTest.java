@@ -22,7 +22,8 @@ public class AuthServiceTest {
   }
   @Test
   public void testDeleteAllAuth() throws DataAccessException {
-    //TODO: Add several Auth Tokens
+    authService.createAuth(new AuthData("authtokentoken", "username"));
+    authService.createAuth(new AuthData("token to prove I'm logged in", "user"));
     authService.deleteAllAuth();
     assertEquals(0, authService.listAuths().size());
   }

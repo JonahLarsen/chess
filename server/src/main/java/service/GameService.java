@@ -19,8 +19,8 @@ public class GameService {
     return this.gameDAO.listGames();
   }
 
-  public void joinGame(String color, int gameID) throws DataAccessException {
-    this.gameDAO.joinGame(color, gameID);
+  public void joinGame(String username, String color, int gameID) throws DataAccessException {
+    this.gameDAO.joinGame(username, color, gameID);
   }
   public int createGame(String gameName) throws DataAccessException {
     return this.gameDAO.createGame(gameName);

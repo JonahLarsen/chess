@@ -80,15 +80,14 @@ public class Server {
     private Object joinGameHandler(Request req, Response res) throws DataAccessException {
       String authToken = req.headers("authorization");
       this.authService.getAuth(authToken);
-      int gameID = req.attribute("gameID");
-      String playerColor = req.attribute("playerColor");
-      if (playerColor.isEmpty()) {
+      JoinGameObject joinGame = new Gson().fromJson(req.body(), JoinGameObject.class);
+      if (joinGame.playerColor() == null) {
         //TODO: Add player as watcher
-
-      } else if (!playerColor.equals("BLACK") && !playerColor.equals("WHITE")) {
+      } else if (!joinGame.playerColor().equals("BLACK") && !joinGame.playerColor().equals("WHITE")) {
         throw new DataAccessException("Error", 400);
       }
-      this.gameService.joinGame(playerColor, gameID);
+      String username = this.authService.getAuth(authToken).username();
+      this.gameService.joinGame(username, joinGame.playerColor(), joinGame.gameID());
       res.status(200);
       return "{}";
     }

@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 import service.AuthService;
 import service.GameService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameServiceTest {
   static final GameService gameService = new GameService(new GameDAOMemory());
@@ -38,11 +37,21 @@ public class GameServiceTest {
   public void testListGamesNegative() throws DataAccessException {
     gameService.createGame("game time");
     gameService.createGame("chess woohoo");
-    //This test is actually not really that good but I check for authorization in the handler rather than the Service so there's no other way to get an error.
+    //This test is actually not really that good but I check for authorization
+    // in the handler rather than the Service so there's no other way to get an error.
     assertThrows(DataAccessException.class, ()->authService.getAuth(null));
   }
 
   @Test
-  public void
+  public void testCreateGamePositive() throws DataAccessException {
+    gameService.createGame("game of chess woohoo");
+    gameService.createGame("chessssssss");
+    assertEquals(2, gameService.listGames().size());
+  }
 
+  @Test
+  public void testCreateGameNegative() throws DataAccessException {
+    //Again I do too much in my handler with the error checking for createGame so this test is not that great
+    //So I don't know how to make a negative test for this one.
+  }
 }

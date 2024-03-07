@@ -1,0 +1,9 @@
+
+W
+java:S1854=":Remove this useless assignment to local variable "spaces".(¥â¹ø8Àß‡îÓ1
+I
+java:S11726",Remove this unused method parameter "board".(°å†8Áß‡îÓ1
+N
+java:S14819",Remove this unused "canMove" local variable.(™¼¨Ğøÿÿÿÿ8Áß‡îÓ1
+H
+java:S1481="+Remove this unused "spaces" local variable.(¥â¹ø8Âß‡îÓ1

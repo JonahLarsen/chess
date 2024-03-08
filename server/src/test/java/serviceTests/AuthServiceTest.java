@@ -1,8 +1,6 @@
 package serviceTests;
 
-import dataAccess.AuthDAOMemory;
-import dataAccess.DataAccessException;
-import dataAccess.UserDAOMemory;
+import dataAccess.*;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class AuthServiceTest {
-  static final AuthService authService = new AuthService(new AuthDAOMemory());
-  static final UserService userService = new UserService(new UserDAOMemory());
+  static final AuthService authService = new AuthService(new AuthDAOSQL());
+  static final UserService userService = new UserService(new UserDAOSQL());
 
   @BeforeEach
   void setUp() throws DataAccessException {

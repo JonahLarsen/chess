@@ -1,8 +1,6 @@
 package serviceTests;
 
-import dataAccess.AuthDAOMemory;
-import dataAccess.DataAccessException;
-import dataAccess.GameDAOMemory;
+import dataAccess.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.AuthService;
@@ -11,9 +9,9 @@ import service.GameService;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameServiceTest {
-  static final GameDAOMemory gameDAO = new GameDAOMemory();
+  static final GameDAOSQL gameDAO = new GameDAOSQL();
   static final GameService gameService = new GameService(gameDAO);
-  static final AuthService authService = new AuthService(new AuthDAOMemory());
+  static final AuthService authService = new AuthService(new AuthDAOSQL());
 
   @BeforeEach
   void setUp() throws DataAccessException {

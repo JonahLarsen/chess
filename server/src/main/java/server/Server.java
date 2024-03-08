@@ -25,9 +25,9 @@ public class Server {
 
 
   public Server() {
-    AuthDAO authDAO = new AuthDAOMemory();
-    GameDAO gameDAO = new GameDAOMemory();
-    UserDAO userDAO = new UserDAOMemory();
+    AuthDAO authDAO = new AuthDAOSQL();
+    GameDAO gameDAO = new GameDAOSQL();
+    UserDAO userDAO = new UserDAOSQL();
 
     this.authService = new AuthService(authDAO);
     this.gameService = new GameService(gameDAO);

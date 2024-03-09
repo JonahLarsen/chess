@@ -9,9 +9,9 @@ import service.GameService;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameServiceTest {
-  static final GameDAOSQL gameDAO = new GameDAOSQL();
+  static final GameDAOMemory gameDAO = new GameDAOMemory();
   static final GameService gameService = new GameService(gameDAO);
-  static final AuthService authService = new AuthService(new AuthDAOSQL());
+  static final AuthService authService = new AuthService(new AuthDAOMemory()); //TODO: Change to SQL
 
   @BeforeEach
   void setUp() throws DataAccessException {

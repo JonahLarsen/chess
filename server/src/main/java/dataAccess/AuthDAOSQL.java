@@ -7,13 +7,8 @@ import java.util.HashMap;
 
 public class AuthDAOSQL implements AuthDAO{
 
-  public AuthDAOSQL() {
-    try {
-      configureDatabase();
-    } catch (DataAccessException e) {
-
-    }
-
+  public AuthDAOSQL() throws DataAccessException {
+    configureDatabase();
   }
 
   public void clear() throws DataAccessException {

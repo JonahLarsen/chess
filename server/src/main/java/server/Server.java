@@ -19,30 +19,36 @@ import model.GameData;
 
 
 public class Server {
-    private final AuthService authService;
-    private final GameService gameService;
-    private final UserService userService;
+    private AuthService authService;
+    private GameService gameService;
+    private UserService userService;
 
 
   public Server() {
-    AuthDAO authDAO = new AuthDAOSQL();
-    GameDAO gameDAO = new GameDAOSQL();
-    UserDAO userDAO = new UserDAOSQL();
-
-    this.authService = new AuthService(authDAO);
-    this.gameService = new GameService(gameDAO);
-    this.userService = new UserService(userDAO);
+    GameDAO gameDAO=null;
+    UserDAO userDAO=null;
+    AuthDAO authDAO=null;
+    try {
+      authDAO=new AuthDAOSQL();
+      gameDAO=new GameDAOSQL();
+      userDAO=new UserDAOSQL();
+    } catch (DataAccessException e) {
+      stop();
+      return;
     }
+    this.gameService=new GameService(gameDAO);
+    this.userService=new UserService(userDAO);
+    this.authService=new AuthService(authDAO);
+
+  }
 
     public static void main(String[] args) {
         Server server = new Server();
         int currentPort = server.run(8080);
-
     }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
-
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.

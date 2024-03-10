@@ -35,7 +35,7 @@ public class UserServiceTest {
 
   @Test
   void testRegisterNegative() throws DataAccessException {
-    AuthData authToken = userService.register(new UserData("user123", "password", "email"));
+    userService.register(new UserData("user123", "password", "email"));
     assertThrows(DataAccessException.class, () -> userService.register(new UserData("user123", "password", "email")));
   }
 

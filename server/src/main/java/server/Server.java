@@ -24,27 +24,21 @@ public class Server {
     private UserService userService;
 
 
+
   public Server() {
-    GameDAO gameDAO=null;
-    UserDAO userDAO=null;
-    AuthDAO authDAO=null;
     try {
-      authDAO=new AuthDAOSQL();
-      gameDAO=new GameDAOSQL();
-      userDAO=new UserDAOSQL();
+      this.authService = new AuthService(new AuthDAOSQL());
+      this.userService = new UserService(new UserDAOMemory());
+      this.gameService = new GameService(new GameDAOMemory());
     } catch (DataAccessException e) {
-      stop();
-      return;
+      System.out.println("Unable to instantiate Server");
     }
-    this.gameService=new GameService(gameDAO);
-    this.userService=new UserService(userDAO);
-    this.authService=new AuthService(authDAO);
 
   }
 
     public static void main(String[] args) {
-        Server server = new Server();
-        int currentPort = server.run(8080);
+      Server server = new Server();
+      int currentPort = server.run(8080);
     }
 
     public int run(int desiredPort) {

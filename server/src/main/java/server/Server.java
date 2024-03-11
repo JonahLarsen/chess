@@ -26,6 +26,9 @@ public class Server {
 
 
   public Server() {
+//    this.authService = new AuthService(new AuthDAOMemory());
+//    this.userService = new UserService(new UserDAOMemory());
+//    this.gameService = new GameService(new GameDAOMemory());
     try {
       this.authService = new AuthService(new AuthDAOSQL());
       this.userService = new UserService(new UserDAOMemory());

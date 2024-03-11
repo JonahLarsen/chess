@@ -16,7 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class AuthServiceTest {
-  static final AuthService authService = new AuthService(new AuthDAOMemory());
+
+
+
+  static AuthService authService = new AuthService(new AuthDAOSQL());
   static final UserService userService = new UserService(new UserDAOMemory());
 
   @BeforeEach

@@ -25,4 +25,8 @@ public class UserDAOMemory implements UserDAO{
   public void clear() throws DataAccessException {
     users.clear();
   }
+
+  public boolean passwordCheck(String userPassword, String realPassword) throws DataAccessException {
+    return userPassword.equals(realPassword);
+  }
 }

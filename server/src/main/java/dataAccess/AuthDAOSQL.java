@@ -36,8 +36,6 @@ public class AuthDAOSQL implements AuthDAO{
     } catch (SQLException e) {
       throw new DataAccessException("Error", 500);
     }
-
-
   }
 
   public void deleteAuth(String authToken) throws DataAccessException {

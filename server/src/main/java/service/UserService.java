@@ -4,6 +4,7 @@ import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
 import model.AuthData;
 import model.UserData;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -28,9 +29,9 @@ public class UserService {
     UserData realUser = this.getUser(user);
     if (realUser == null) {
       throw new DataAccessException("Error", 401);
-    } else if (user.password().equals(realUser.password())) {
+    } else if (this.userDAO.passwordCheck(user.password(), realUser.password())) {
       return new AuthData(UUID.randomUUID().toString(), user.username());
-    } else {
+    }  else {
       throw new DataAccessException("Error", 401);
     }
   }

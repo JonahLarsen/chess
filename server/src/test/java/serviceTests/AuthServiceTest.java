@@ -16,10 +16,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class AuthServiceTest {
+  static AuthService authService;
+  public AuthServiceTest() {
+    try {
+      authService = new AuthService(new AuthDAOSQL());
+    } catch (DataAccessException e) {
+      System.out.println("Can't create test class");
+    }
+
+  }
 
 
-
-  static AuthService authService = new AuthService(new AuthDAOSQL());
   static final UserService userService = new UserService(new UserDAOMemory());
 
   @BeforeEach

@@ -107,15 +107,6 @@ public class AuthDAOSQL implements AuthDAO{
 
 
   private void configureDatabase() throws DataAccessException {
-    DatabaseManager.createDatabase();
-    try (var conn = DatabaseManager.getConnection()) {
-      for (var statement : createStatements) {
-        try (var preparedStatement = conn.prepareStatement(statement)) {
-          preparedStatement.executeUpdate();
-        }
-      }
-    } catch (SQLException e) {
-      throw new DataAccessException("error", 500);
-    }
+    ConfigureDatabase.configureDatabase(createStatements);
   }
 }

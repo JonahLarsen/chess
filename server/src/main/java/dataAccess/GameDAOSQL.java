@@ -88,8 +88,30 @@ public class GameDAOSQL implements GameDAO{
     } else if (color != null && color.equals("WHITE") && game.whiteUsername() != null) {
       throw new DataAccessException("Error", 403);
     }
-    ChessGame chessGame = game.game();
-
+    if (color != null && color.equals("BLACK")) {
+      try (var conn = DatabaseManager.getConnection()) {
+        var statement = "UPDATE game SET blackUsername = ? WHERE gameID = ?";
+        try (var preparedStatement = conn.prepareStatement(statement)) {
+          preparedStatement.setString(1, username);
+          preparedStatement.setInt(2, gameID);
+          preparedStatement.executeUpdate();
+        }
+      } catch (SQLException e) {
+        throw new DataAccessException("Error", 500);
+      }
+    } else if (color != null && color.equals("WHITE")) {
+      try (var conn = DatabaseManager.getConnection()) {
+        var statement = "UPDATE game SET whiteUsername = ? WHERE gameID = ?";
+        try (var preparedStatement = conn.prepareStatement(statement)) {
+          preparedStatement.setString(1, username);
+          preparedStatement.setInt(2, gameID);
+          preparedStatement.executeUpdate();
+        }
+        game = getGame(1);
+      } catch (SQLException e) {
+        throw new DataAccessException("Error", 500);
+      }
+    }
   }
 
   public Collection<GameData> listGames() throws DataAccessException {

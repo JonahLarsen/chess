@@ -29,7 +29,7 @@ public class Server {
     try {
       this.authService = new AuthService(new AuthDAOSQL());
       this.userService = new UserService(new UserDAOSQL());
-      this.gameService = new GameService(new GameDAOMemory());
+      this.gameService = new GameService(new GameDAOSQL());
     } catch (DataAccessException e) {
       System.out.println("Unable to instantiate Server");
     }

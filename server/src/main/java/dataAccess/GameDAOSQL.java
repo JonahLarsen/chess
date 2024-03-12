@@ -6,6 +6,7 @@ import model.GameData;
 import model.UserData;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,15 +33,20 @@ public class GameDAOSQL implements GameDAO{
     var jsonGame = new Gson().toJson(newGame);
     try (var conn = DatabaseManager.getConnection()) {
       var statement = "INSERT INTO game (gameName, game) VALUES (?, ?)";
-      try (var preparedStatement = conn.prepareStatement(statement)) {
+      try (var preparedStatement = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
         preparedStatement.setString(1, gameName);
         preparedStatement.setString(2, jsonGame);
-        int gameID = preparedStatement.executeUpdate();
-        return gameID;
+        preparedStatement.executeUpdate();
+
+        var result = preparedStatement.getGeneratedKeys();
+        if (result.next()) {
+          return result.getInt(1);
+        }
       }
     } catch (SQLException e) {
       throw new DataAccessException("Error", 500);
     }
+    return 0;
   }
 
   public void checkGameExists(int gameID) throws DataAccessException {

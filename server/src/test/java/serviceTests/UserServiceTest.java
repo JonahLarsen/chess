@@ -11,8 +11,16 @@ import service.UserService;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserServiceTest {
-  static final UserService userService = new UserService(new UserDAOMemory());
-  static final AuthService authService = new AuthService(new AuthDAOMemory());
+  static AuthService authService;
+  static UserService userService;
+  public UserServiceTest() {
+    try {
+      authService = new AuthService(new AuthDAOSQL());
+      userService = new UserService(new UserDAOSQL());
+    } catch (DataAccessException e) {
+      System.out.println("Can't create test class");
+    }
+  }
   @BeforeEach
   void setUp () throws DataAccessException {
     userService.deleteAllUsers();

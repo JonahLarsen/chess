@@ -1,18 +1,38 @@
 package dataAccess;
 
+import model.AuthData;
 import model.UserData;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 public class UserDAOSQL implements UserDAO{
-  public void insertUser(UserData u) throws DataAccessException {
 
+  public UserDAOSQL() throws DataAccessException {
+    configureDatabase();
   }
 
   public Collection<UserData> listUsers() throws DataAccessException {
-    return null;
+    ArrayList<UserData> result = new ArrayList<>();
+    try (var conn = DatabaseManager.getConnection()) {
+      var statement = "SELECT username, password, email FROM user";
+      try (var preparedStatement = conn.prepareStatement(statement)) {
+        try (var response = preparedStatement.executeQuery()) {
+          while (response.next()) {
+            String name = response.getString("username");
+            String password = response.getString("password");
+            String email = response.getString("email");
+            result.add(new UserData(name, password, email));
+          }
+          return result;
+        }
+      }
+    } catch (SQLException e) {
+      throw new DataAccessException("Error", 500);
+    }
   }
 
   public void createUser(UserData user) throws DataAccessException {
@@ -32,7 +52,24 @@ public class UserDAOSQL implements UserDAO{
   }
 
   public UserData getUser(String username) throws DataAccessException {
-    return null;
+    try (var conn = DatabaseManager.getConnection()) {
+      var statement = "SELECT username, password, email FROM user WHERE username = ?";
+      try (var preparedStatement = conn.prepareStatement(statement)) {
+        preparedStatement.setString(1, username);
+        try (var response = preparedStatement.executeQuery()) {
+          if (response.next()) {
+            String name = response.getString("username");
+            String password = response.getString("password");
+            String email = response.getString("email");
+            return new UserData(name, password, email);
+          } else {
+            return null;
+          }
+        }
+      }
+    } catch (Exception e) {
+      throw new DataAccessException("Error", 401);
+    }
   }
 
   public void clear() throws DataAccessException {

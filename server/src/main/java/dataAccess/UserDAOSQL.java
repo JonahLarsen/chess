@@ -67,7 +67,7 @@ public class UserDAOSQL implements UserDAO{
           }
         }
       }
-    } catch (Exception e) {
+    } catch (SQLException e) {
       throw new DataAccessException("Error", 401);
     }
   }

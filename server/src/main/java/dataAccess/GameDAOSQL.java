@@ -8,6 +8,7 @@ import model.UserData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 
 public class GameDAOSQL implements GameDAO{
@@ -115,15 +116,19 @@ public class GameDAOSQL implements GameDAO{
   }
 
   public Collection<GameData> listGames() throws DataAccessException {
-    ArrayList<GameData> result = new ArrayList<>();
+    HashSet<GameData> result = new HashSet<>();
     try (var conn = DatabaseManager.getConnection()) {
-      var statement = "SELECT game FROM game";
+      var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM game";
       try (var preparedStatement = conn.prepareStatement(statement)) {
         try (var response = preparedStatement.executeQuery()) {
           while (response.next()) {
-            var jsonGame = response.getString("game");
-            GameData game = new Gson().fromJson(jsonGame, GameData.class);
-            result.add(game);
+            int id = response.getInt("gameID");
+            String whiteUsername = response.getString("whiteUsername");
+            String blackUsername = response.getString("blackUsername");
+            String gameName = response.getString("gameName");
+            String jsonGame = response.getString("game");
+            ChessGame game = new Gson().fromJson(jsonGame, ChessGame.class);
+            result.add(new GameData(id, whiteUsername, blackUsername, gameName, game));
           }
           return result;
         }

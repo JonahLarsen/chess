@@ -5,13 +5,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.AuthService;
 import service.GameService;
+import service.UserService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameServiceTest {
-  static final GameDAOMemory gameDAO = new GameDAOMemory();
-  static final GameService gameService = new GameService(gameDAO);
-  static final AuthService authService = new AuthService(new AuthDAOMemory()); //TODO: Change to SQL
+  static AuthService authService;
+  static GameService gameService;
+  public GameServiceTest() {
+    try {
+      authService = new AuthService(new AuthDAOSQL());
+      gameService = new GameService(new GameDAOSQL());
+    } catch (DataAccessException e) {
+      System.out.println("Can't create test class");
+    }
+  }
 
   @BeforeEach
   void setUp() throws DataAccessException {

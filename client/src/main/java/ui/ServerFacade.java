@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
@@ -68,8 +69,6 @@ public class ServerFacade {
       HttpURLConnection http = (HttpURLConnection) url.openConnection();
       http.setRequestMethod(method);
       http.setDoOutput(true);
-
-      http.addRequestProperty("authorization", header);
 
       writeBody(request, http);
       http.connect();

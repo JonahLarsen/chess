@@ -34,7 +34,7 @@ public class ChessClient {
         case "createGame" -> createGame();
         case "listGames" -> listGames();
         case "joinGame" -> joinGame();
-        case "joinObserver" -> joinObserver();
+        case "observer" -> joinObserver();
         default -> help();
       };
     } catch (ResponseException e) {
@@ -80,7 +80,23 @@ public class ChessClient {
   }
 
   public String help() {
-    return null;
+    if (state.equals(State.SIGNEDIN)) {
+      return """
+              'help' - List available commands
+              'logout' - Logout of Chess
+              'createGame <NAME>' - Create a new Chess game
+              'listGames' - List all Chess games
+              'joinGame <ID> [WHITE|BLACK|<empty>]' - Join a Chess game
+              'observe <ID>' Observe a Chess game
+              """;
+    } else {
+      return """
+              'help' - List available commands
+              'quit' - Exit the Chess program
+              'login <USERNAME> <PASSWORD>' - Login to Chess account
+              'register <USERNAME> <PASSWORD> <EMAIL>' - Create a Chess account
+              """;
+    }
   }
 
   private void assertSignedIn() throws ResponseException {

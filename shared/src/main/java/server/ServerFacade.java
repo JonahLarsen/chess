@@ -2,6 +2,7 @@ package server;
 
 import model.AuthData;
 import model.GameData;
+import model.UserData;
 
 import java.util.Collection;
 
@@ -13,23 +14,23 @@ public class ServerFacade {
     serverURL = url;
   }
 
-  public void joinGame() {
+  public void joinGame(int gameID, String playerColor, AuthData user) {
 
   }
 
-  public GameData createGame() {
+  public GameData createGame(AuthData user, GameData game) {
     return null;
   }
 
-  public Collection<GameData> listGames() {
+  public Collection<GameData> listGames(AuthData user) {
     return null;
   }
 
-  public void logout() {
+  public void logout(AuthData user) {
 
   }
 
-  public AuthData login() {
+  public AuthData login(UserData user) {
     return null;
   }
 
@@ -37,7 +38,7 @@ public class ServerFacade {
 
   }
 
-  public AuthData register() {
+  public AuthData register(UserData user) {
     return null;
   }
 }

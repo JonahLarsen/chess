@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessBoard;
 import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
@@ -7,6 +8,8 @@ import model.UserData;
 
 import java.util.Arrays;
 import java.util.HashMap;
+
+import static ui.ChessBoard.drawChessBoard;
 
 public class ChessClient {
   private final ServerFacade server;
@@ -114,11 +117,14 @@ public class ChessClient {
     int gameID =IDMap.get(gameListID);
     if (params.length > 1) {
       server.joinGame(gameID, params[1], currentUser);
-      return "Successfully Joined Game";
     } else {
-        server.joinGame(gameID, null, currentUser);
-        return "Successfully Joined Game as Observer";
+      server.joinGame(gameID, null, currentUser);
     }
+    chess.ChessBoard board = new chess.ChessBoard();
+    board.resetBoard();
+    drawChessBoard(board, "BLACK");
+    drawChessBoard(board, "WHITE");
+    return "Successfully Joined Game";
   }
 
 

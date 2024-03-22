@@ -70,6 +70,8 @@ public class ServerFacade {
       http.setRequestMethod(method);
       http.setDoOutput(true);
 
+      http.setRequestProperty("authorization", header);
+
       writeBody(request, http);
       http.connect();
       throwIfNotSuccessful(http);

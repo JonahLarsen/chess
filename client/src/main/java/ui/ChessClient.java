@@ -40,7 +40,7 @@ public class ChessClient {
         case "logout" -> logout();
         case "creategame" -> createGame(params);
         case "listgames" -> listGames();
-        case "joingame", "observer" -> joinGame(params);
+        case "joingame", "observe" -> joinGame(params);
         default -> help();
       };
     } catch (ResponseException e) {

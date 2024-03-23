@@ -116,7 +116,7 @@ public class ChessClient {
     int gameListID=Integer.parseInt(params[0]);
     int gameID =IDMap.get(gameListID);
     if (params.length > 1) {
-      server.joinGame(gameID, params[1], currentUser);
+      server.joinGame(gameID, params[1].toUpperCase(), currentUser);
     } else {
       server.joinGame(gameID, null, currentUser);
     }

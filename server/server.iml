@@ -20,6 +20,7 @@
     <orderEntry type="library" name="slf4j.simple" level="project" />
     <orderEntry type="library" name="mysql.connector.java" level="project" />
     <orderEntry type="library" name="springframework.security.spring.core" level="project" />
+    <orderEntry type="library" name="glassfish.tyrus.bundles.standalone.client" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="39595d68-aeca-4235-893b-b796f4ca4b31" />

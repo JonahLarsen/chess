@@ -160,18 +160,17 @@ public class ChessClient {
     } else {
       playerColorString = null;
       server.joinGame(gameID, null, currentUser);
-      state = State.INGAME;
     }
-    if (playerColorString == "BLACK") {
-      socket = new WebSocketFacade(serverURL, notificationHandler, ChessGame.TeamColor.BLACK);
-    } else if (playerColorString == "WHITE") {
-      socket = new WebSocketFacade(serverURL, notificationHandler, ChessGame.TeamColor.WHITE);
-    } else {
+    if (playerColorString == null) {
       socket = new WebSocketFacade(serverURL, notificationHandler, null);
+    } else if (playerColorString.equals("BLACK")) {
+      socket = new WebSocketFacade(serverURL, notificationHandler, ChessGame.TeamColor.BLACK);
+    } else if (playerColorString.equals("WHITE")) {
+      socket = new WebSocketFacade(serverURL, notificationHandler, ChessGame.TeamColor.WHITE);
     }
 
     socket.joinGame(currentUser.authToken(), gameID);
-
+    state = State.INGAME;
 
     return "Successfully Joined Game";
   }

@@ -1,6 +1,5 @@
 package websocket;
 
-import com.google.gson.Gson;
 import exception.ResponseException;
 
 import javax.websocket.*;
@@ -31,7 +30,7 @@ public class WebSocketFacade extends Endpoint {
         }
       });
     } catch (DeploymentException | IOException | URISyntaxException ex) {
-      throw new ResponseException(500, ex.getMessage());
+      throw new ResponseException(ex.getMessage());
     }
   }
 

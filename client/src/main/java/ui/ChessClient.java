@@ -1,6 +1,5 @@
 package ui;
 
-import chess.ChessBoard;
 import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
@@ -16,15 +15,15 @@ public class ChessClient {
   private final String serverURL;
   private State state = State.SIGNEDOUT;
   private AuthData currentUser;
-  private HashMap<Integer, Integer> IDMap = new HashMap<>();
+  private HashMap<Integer, Integer> idMap= new HashMap<>();
   public enum State {
     SIGNEDOUT,
     SIGNEDIN
   }
 
-  public ChessClient(String URL) {
-    server = new ServerFacade(URL);
-    serverURL = URL;
+  public ChessClient(String url) {
+    server = new ServerFacade(url);
+    serverURL = url;
   }
 
 
@@ -58,7 +57,7 @@ public class ChessClient {
       state = State.SIGNEDIN;
       return "Successfully Logged In";
     }
-    throw new ResponseException(400, "Expected <USERNAME> <PASSWORD>");
+    throw new ResponseException("Expected <USERNAME> <PASSWORD>");
   }
 
   public String register(String... params) throws ResponseException {
@@ -72,7 +71,7 @@ public class ChessClient {
       state = State.SIGNEDIN;
       return "Successfully Registered new account and logged in.";
     } else {
-      throw new ResponseException(400, "Expected <USERNAME> <PASSWORD> <EMAIL>");
+      throw new ResponseException("Expected <USERNAME> <PASSWORD> <EMAIL>");
     }
   }
 
@@ -94,7 +93,7 @@ public class ChessClient {
 
   public String listGames() throws ResponseException {
     assertSignedIn();
-    IDMap.clear();
+    idMap.clear();
     var games = server.listGames(currentUser);
     var result = new StringBuilder();
     int gameListID = 1;
@@ -102,7 +101,7 @@ public class ChessClient {
       result.append(gameListID).append(": ").append("GameID: ").append(game.gameID())
               .append(", Game Name: ").append(game.gameName()).append(", Black Player: ").append(game.blackUsername())
               .append(", White Player: ").append(game.whiteUsername()).append("\n");
-      IDMap.put(gameListID, game.gameID());
+      idMap.put(gameListID, game.gameID());
       gameListID++;
     }
     return result.toString();
@@ -111,10 +110,10 @@ public class ChessClient {
   public String joinGame(String... params) throws ResponseException {
     assertSignedIn();
     if (params.length == 0) {
-      throw new ResponseException(400, "Expected <ID> [WHITE|BLACK|<empty>]");
+      throw new ResponseException("Expected <ID> [WHITE|BLACK|<empty>]");
     }
     int gameListID=Integer.parseInt(params[0]);
-    int gameID =IDMap.get(gameListID);
+    int gameID =idMap.get(gameListID);
     if (params.length > 1) {
       server.joinGame(gameID, params[1].toUpperCase(), currentUser);
     } else {
@@ -150,13 +149,13 @@ public class ChessClient {
 
   private void assertSignedIn() throws ResponseException {
     if (state == State.SIGNEDOUT) {
-      throw new ResponseException(400, "You must sign in");
+      throw new ResponseException("You must sign in");
     }
   }
 
   private void assertSignedOut() throws ResponseException {
     if (state == State.SIGNEDIN) {
-      throw new ResponseException(400, "Already signed in");
+      throw new ResponseException("Already signed in");
     }
   }
 }

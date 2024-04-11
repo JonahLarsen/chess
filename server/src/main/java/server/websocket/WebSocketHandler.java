@@ -183,7 +183,7 @@ public class WebSocketHandler {
         throw new DataAccessException("error", 500);
       } else if ((command.getPlayerColor() == ChessGame.TeamColor.BLACK &&(authenticatedGame.blackUsername() == null || !authenticatedGame.blackUsername().equals(authenticatedUser.username())))
         || (command.getPlayerColor() == ChessGame.TeamColor.WHITE && (authenticatedGame.whiteUsername() == null || !authenticatedGame.whiteUsername().equals(authenticatedUser.username())))) {
-        throw new ResponseException(500, "error");
+        throw new ResponseException("error");
       }
       connections.add(command.getAuthString(), session, command.getGameID());
       String message = String.format("%s joined the game \"%s\" as the %s player.", authenticatedUser.username(), authenticatedGame.gameName(), command.getPlayerColor());

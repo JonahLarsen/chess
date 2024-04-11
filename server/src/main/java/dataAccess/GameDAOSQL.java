@@ -1,5 +1,6 @@
 package dataAccess;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
@@ -63,6 +64,10 @@ public class GameDAOSQL implements GameDAO{
     } catch (SQLException e) {
       throw new DataAccessException("Error", 500);
     }
+  }
+
+  public void updateGame(int gameID, ChessGame game) {
+
   }
   public GameData getGame(int gameID) throws DataAccessException {
     try (var conn = DatabaseManager.getConnection()) {
@@ -151,7 +156,7 @@ public class GameDAOSQL implements GameDAO{
       whiteUsername varchar(256) DEFAULT NULL,
       blackUsername varchar(256) DEFAULT NULL,
       gameName varchar(256) NOT NULL,
-      game varchar(256) NOT NULL,
+      game text NOT NULL,
       PRIMARY KEY (gameID)
       ) 
     """

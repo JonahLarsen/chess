@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -14,7 +15,9 @@ public class ChessGame {
     private ChessBoard board;
 
     public ChessGame() {
-
+        this.turn = TeamColor.WHITE;
+        this.setBoard(new ChessBoard());
+        this.board.resetBoard();
     }
 
     /**

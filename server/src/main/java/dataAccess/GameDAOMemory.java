@@ -47,4 +47,8 @@ public class GameDAOMemory implements GameDAO {
   public GameData getGame(int gameID) {
     return games.get(gameID);
   }
+
+  public void updateGame(String whiteUsername, String blackUsername,
+  ChessGame chess, int gameID) throws DataAccessException {
+  }
 }

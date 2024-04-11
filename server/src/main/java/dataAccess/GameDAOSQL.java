@@ -66,8 +66,21 @@ public class GameDAOSQL implements GameDAO{
     }
   }
 
-  public void updateGame(int gameID, ChessGame game) {
-
+  public void updateGame(String whiteUsername, String blackUsername,
+                         ChessGame chess, int gameID) throws DataAccessException {
+    var jsonGame = new Gson().toJson(chess);
+    try (var conn = DatabaseManager.getConnection()) {
+      var statement = "UPDATE game SET whiteUsername = ?, blackUsername = ?, game = ? WHERE gameID = ?";
+      try (var preparedStatement = conn.prepareStatement(statement)) {
+        preparedStatement.setString(1, whiteUsername);
+        preparedStatement.setString(2, blackUsername);
+        preparedStatement.setString(3, jsonGame);
+        preparedStatement.setInt(4, gameID);
+        preparedStatement.executeUpdate();
+      }
+    } catch (SQLException e) {
+      throw new DataAccessException("Error", 500);
+    }
   }
   public GameData getGame(int gameID) throws DataAccessException {
     try (var conn = DatabaseManager.getConnection()) {

@@ -290,10 +290,7 @@ public class ChessPiece {
         if (board.getPiece(tempPosition) == null && tempPosition.getRow() != 8) {
           validMoves.add(new ChessMove(myPosition, tempPosition, null));
         } else if (board.getPiece(tempPosition) == null && tempPosition.getRow() == 8) {
-          validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.QUEEN));
-          validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.BISHOP));
-          validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.ROOK));
-          validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.KNIGHT));
+          extracted(myPosition, validMoves, tempPosition);
         }
         //Double Move
         if (hasNotMoved) {
@@ -320,10 +317,7 @@ public class ChessPiece {
         if (board.getPiece(tempPosition) == null && tempPosition.getRow() != 1) {
           validMoves.add(new ChessMove(myPosition, tempPosition, null));
         } else if (board.getPiece(tempPosition) == null && tempPosition.getRow() == 1) {
-          validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.QUEEN));
-          validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.BISHOP));
-          validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.ROOK));
-          validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.KNIGHT));
+          extracted(myPosition, validMoves, tempPosition);
         }
         //Double Move
         if (hasNotMoved) {
@@ -351,12 +345,16 @@ public class ChessPiece {
       return validMoves;
     }
 
+  private static void extracted(ChessPosition myPosition, ArrayList<ChessMove> validMoves, ChessPosition tempPosition) {
+    validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.QUEEN));
+    validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.BISHOP));
+    validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.ROOK));
+    validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.KNIGHT));
+  }
+
   private void capturePieceRight(ChessPosition myPosition, ArrayList<ChessMove> validMoves, ChessPosition tempPosition) {
     if (tempPosition.getRow() == 1) {
-      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.QUEEN));
-      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.BISHOP));
-      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.ROOK));
-      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.KNIGHT));
+      extracted(myPosition, validMoves, tempPosition);
     } else {
       validMoves.add(new ChessMove(myPosition, tempPosition, null));
     }
@@ -364,10 +362,7 @@ public class ChessPiece {
 
   private void setBeginningRow(ChessPosition myPosition, ArrayList<ChessMove> validMoves, ChessPosition tempPosition) {
     if (tempPosition.getRow() == 8) {
-      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.QUEEN));
-      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.BISHOP));
-      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.ROOK));
-      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.KNIGHT));
+      extracted(myPosition, validMoves, tempPosition);
     } else {
       validMoves.add(new ChessMove(myPosition, tempPosition, null));
     }

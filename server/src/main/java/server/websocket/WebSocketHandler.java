@@ -19,6 +19,9 @@ import webSocketMessages.userCommands.*;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static chess.ChessGame.TeamColor.BLACK;
+import static chess.ChessGame.TeamColor.WHITE;
+
 @WebSocket
 public class WebSocketHandler {
   private final ConcurrentHashMap<Integer, ConnectionManager> gameManagers = new ConcurrentHashMap<>();
@@ -130,6 +133,46 @@ public class WebSocketHandler {
       Notification notification = new Notification(message);
       connections.broadcast(authenticatedUser.authToken(), notification, authenticatedGame.gameID());
       connections.broadcast("", new LoadGame(authenticatedGame), authenticatedGame.gameID());
+
+      if (gameRep.isInCheck(BLACK)) {
+        String notif = String.format("The Black Team played by %s is in check.", authenticatedGame.blackUsername());
+        Notification notify = new Notification(notif);
+        connections.broadcast("", notify, authenticatedGame.gameID());
+      } else if (gameRep.isInCheckmate(BLACK)) {
+        String notif = String.format("The Black Team played by %s is in checkmate. %s wins!", authenticatedGame.blackUsername(), authenticatedGame.whiteUsername());
+        Notification notify = new Notification(notif);
+        connections.broadcast("", notify, authenticatedGame.gameID());
+
+      } else if (gameRep.isInCheck(WHITE)) {
+        String notif = String.format("The White Team played by %s is in check.", authenticatedGame.whiteUsername());
+        Notification notify = new Notification(notif);
+        connections.broadcast("", notify, authenticatedGame.gameID());
+        gameRep.setTeamTurn(ChessGame.TeamColor.NIL);
+        gameDAO.updateGame(authenticatedGame.whiteUsername(), authenticatedGame.blackUsername(),
+                gameRep, authenticatedGame.gameID());
+      } else if (gameRep.isInCheckmate(WHITE)) {
+        String notif = String.format("The Black Team played by %s is in check.", authenticatedGame.blackUsername());
+        Notification notify = new Notification(notif);
+        connections.broadcast("", notify, authenticatedGame.gameID());
+        gameRep.setTeamTurn(ChessGame.TeamColor.NIL);
+        gameDAO.updateGame(authenticatedGame.whiteUsername(), authenticatedGame.blackUsername(),
+                gameRep, authenticatedGame.gameID());
+      } else if (gameRep.isInStalemate(BLACK)) {
+        String notif = String.format("The Black Team played by %s is in stalemate. %s wins!", authenticatedGame.blackUsername(), authenticatedGame.whiteUsername());
+        Notification notify = new Notification(notif);
+        connections.broadcast("", notify, authenticatedGame.gameID());
+        gameRep.setTeamTurn(ChessGame.TeamColor.NIL);
+        gameDAO.updateGame(authenticatedGame.whiteUsername(), authenticatedGame.blackUsername(),
+                gameRep, authenticatedGame.gameID());
+      } else if (gameRep.isInStalemate(WHITE)) {
+        String notif = String.format("The White Team played by %s is in stalemate. %s wins!", authenticatedGame.whiteUsername(), authenticatedGame.blackUsername());
+        Notification notify = new Notification(notif);
+        connections.broadcast("", notify, authenticatedGame.gameID());
+        gameRep.setTeamTurn(ChessGame.TeamColor.NIL);
+        gameDAO.updateGame(authenticatedGame.whiteUsername(), authenticatedGame.blackUsername(),
+                gameRep, authenticatedGame.gameID());
+      }
+
     } catch (DataAccessException e) {
       sendError(session, "Error: It is not your turn.");
     } catch (InvalidMoveException e) {
@@ -145,10 +188,10 @@ public class WebSocketHandler {
     ChessGame.TeamColor playerColor;
     if (authenticatedGame.whiteUsername() != null &&
             authenticatedGame.whiteUsername().equals(authenticatedUser.username())) {
-      playerColor = ChessGame.TeamColor.WHITE;
+      playerColor = WHITE;
     } else if (authenticatedGame.blackUsername() != null &&
             authenticatedGame.blackUsername().equals(authenticatedUser.username())) {
-      playerColor = ChessGame.TeamColor.BLACK;
+      playerColor = BLACK;
     } else {
       throw new DataAccessException("error", 500); //Player is an observer
     }
@@ -181,8 +224,8 @@ public class WebSocketHandler {
       GameData authenticatedGame = gameDAO.getGame(command.getGameID());
       if (authenticatedGame == null) {
         throw new DataAccessException("error", 500);
-      } else if ((command.getPlayerColor() == ChessGame.TeamColor.BLACK &&(authenticatedGame.blackUsername() == null || !authenticatedGame.blackUsername().equals(authenticatedUser.username())))
-        || (command.getPlayerColor() == ChessGame.TeamColor.WHITE && (authenticatedGame.whiteUsername() == null || !authenticatedGame.whiteUsername().equals(authenticatedUser.username())))) {
+      } else if ((command.getPlayerColor() == BLACK &&(authenticatedGame.blackUsername() == null || !authenticatedGame.blackUsername().equals(authenticatedUser.username())))
+        || (command.getPlayerColor() == WHITE && (authenticatedGame.whiteUsername() == null || !authenticatedGame.whiteUsername().equals(authenticatedUser.username())))) {
         throw new ResponseException("error");
       }
       connections.add(command.getAuthString(), session, command.getGameID());

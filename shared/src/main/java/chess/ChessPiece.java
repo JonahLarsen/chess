@@ -336,26 +336,12 @@ public class ChessPiece {
         //Capture Piece Right
         tempPosition = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() + 1);
         if (tempPosition.getRow() >= 1 && tempPosition.getColumn() <= 8 && board.getPiece(tempPosition) != null && board.getPiece(tempPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
-          if (tempPosition.getRow() == 1) {
-            validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.QUEEN));
-            validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.BISHOP));
-            validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.ROOK));
-            validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.KNIGHT));
-          } else {
-            validMoves.add(new ChessMove(myPosition, tempPosition, null));
-          }
+          capturePieceRight(myPosition, validMoves, tempPosition);
         }
         //Capture Piece Left
         tempPosition = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 1);
         if (tempPosition.getRow() >= 1 && tempPosition.getColumn() >= 1 && board.getPiece(tempPosition) != null && board.getPiece(tempPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
-          if (tempPosition.getRow() == 1) {
-            validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.QUEEN));
-            validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.BISHOP));
-            validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.ROOK));
-            validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.KNIGHT));
-          } else {
-            validMoves.add(new ChessMove(myPosition, tempPosition, null));
-          }
+          capturePieceRight(myPosition, validMoves, tempPosition);
         }
 
 
@@ -364,6 +350,17 @@ public class ChessPiece {
 
       return validMoves;
     }
+
+  private void capturePieceRight(ChessPosition myPosition, ArrayList<ChessMove> validMoves, ChessPosition tempPosition) {
+    if (tempPosition.getRow() == 1) {
+      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.QUEEN));
+      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.BISHOP));
+      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.ROOK));
+      validMoves.add(new ChessMove(myPosition, tempPosition, PieceType.KNIGHT));
+    } else {
+      validMoves.add(new ChessMove(myPosition, tempPosition, null));
+    }
+  }
 
   private void setBeginningRow(ChessPosition myPosition, ArrayList<ChessMove> validMoves, ChessPosition tempPosition) {
     if (tempPosition.getRow() == 8) {

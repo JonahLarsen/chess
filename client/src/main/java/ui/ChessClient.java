@@ -25,6 +25,7 @@ public class ChessClient {
   private HashMap<Integer, Integer> idMap= new HashMap<>();
   private int currentGameID;
   private final NotificationHandler notificationHandler;
+  private String playerColorString;
   public enum State {
     SIGNEDOUT,
     SIGNEDIN,
@@ -56,11 +57,18 @@ public class ChessClient {
         case "resign" -> resign();
         case "confirm" -> confirmResign();
         case "cancel" -> cancelResign();
+        case "redraw" -> redraw();
         default -> help();
       };
     } catch (ResponseException e) {
       return e.getMessage();
     }
+  }
+
+  public String redraw() throws ResponseException{
+    assertInGame();
+    socket.redraw(playerColorString);
+    return "";
   }
 
   public String cancelResign() throws ResponseException {
@@ -153,7 +161,6 @@ public class ChessClient {
     int gameListID=Integer.parseInt(params[0]);
     int gameID = idMap.get(gameListID);
     currentGameID = gameID;
-    String playerColorString;
     if (params.length > 1) {
       playerColorString = params[1].toUpperCase();
       server.joinGame(gameID, playerColorString, currentUser);

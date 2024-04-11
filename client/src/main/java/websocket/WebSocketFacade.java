@@ -22,6 +22,7 @@ public class WebSocketFacade extends Endpoint {
   Session session;
   NotificationHandler notificationHandler;
   ChessGame.TeamColor teamColor;
+  chess.ChessBoard currentBoard;
 
 
   public WebSocketFacade(String url, NotificationHandler notificationHandler, ChessGame.TeamColor teamColor) throws ResponseException {
@@ -47,10 +48,11 @@ public class WebSocketFacade extends Endpoint {
             notificationHandler.receiveServerMessage(notifMessage.getMessage());
           } else if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
             LoadGame loadGameMessage = new Gson().fromJson(message, LoadGame.class);
+            currentBoard = loadGameMessage.getGame().game().getBoard();
             if (teamColor == ChessGame.TeamColor.BLACK) {
-              ChessBoard.drawChessBoard(loadGameMessage.getGame().game().getBoard(), "BLACK" );
+              ChessBoard.drawChessBoard(currentBoard, "BLACK" );
             } else {
-              ChessBoard.drawChessBoard(loadGameMessage.getGame().game().getBoard(),"WHITE");
+              ChessBoard.drawChessBoard(currentBoard,"WHITE");
             }
 
           }
@@ -59,6 +61,10 @@ public class WebSocketFacade extends Endpoint {
     } catch (DeploymentException | IOException | URISyntaxException ex) {
       throw new ResponseException(ex.getMessage());
     }
+  }
+
+  public void redraw(String color) {
+    ChessBoard.drawChessBoard(currentBoard, color);
   }
   public void resign(String authToken, int gameID) throws ResponseException {
     try {

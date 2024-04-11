@@ -36,7 +36,8 @@ public class Repl implements NotificationHandler {
   }
 
   public void receiveServerMessage(String message) {
-
+    System.out.println(message);
+    printPrompt();
   }
   private void printPrompt() {
     System.out.print(SET_TEXT_COLOR_GREEN + "\n" + ">>> ");

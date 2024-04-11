@@ -1,13 +1,16 @@
 package ui;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import org.glassfish.grizzly.http.server.Response;
 import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -20,6 +23,7 @@ public class ChessClient {
   private State state = State.SIGNEDOUT;
   private AuthData currentUser;
   private HashMap<Integer, Integer> idMap= new HashMap<>();
+  private int currentGameID;
   private final NotificationHandler notificationHandler;
   public enum State {
     SIGNEDOUT,
@@ -47,6 +51,7 @@ public class ChessClient {
         case "creategame" -> createGame(params);
         case "listgames" -> listGames();
         case "joingame", "observe" -> joinGame(params);
+        case "leave" -> leave();
         default -> help();
       };
     } catch (ResponseException e) {
@@ -54,6 +59,15 @@ public class ChessClient {
     }
   }
 
+  public void resign() {
+
+  }
+
+  public void leave() throws ResponseException {
+    assertInGame();
+    state = State.SIGNEDIN;
+    socket.leave(currentUser.authToken(), currentGameID);
+  }
   public String login(String... params) throws ResponseException {
     assertSignedOut();
     if (params.length >= 2) {
@@ -120,7 +134,8 @@ public class ChessClient {
       throw new ResponseException("Expected <ID> [WHITE|BLACK|<empty>]");
     }
     int gameListID=Integer.parseInt(params[0]);
-    int gameID =idMap.get(gameListID);
+    int gameID = idMap.get(gameListID);
+    currentGameID = gameID;
     String playerColorString;
     if (params.length > 1) {
       playerColorString = params[1].toUpperCase();
@@ -187,8 +202,8 @@ public class ChessClient {
   }
 
   private void assertInGame() throws ResponseException {
-    if (state == State.INGAME) {
-      throw new ResponseException("Player is in game");
+    if (state != State.INGAME) {
+      throw new ResponseException("Must login first");
     }
   }
 }

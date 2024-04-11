@@ -5,6 +5,7 @@ import dataAccess.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import server.websocket.WebSocketHandler;
 import service.AuthService;
 import service.GameService;
 import service.GamesListWrapper;
@@ -23,6 +24,8 @@ public class Server {
     private GameService gameService;
     private UserService userService;
 
+    private WebSocketHandler webSocketHandler;
+
 
 
   public Server() {
@@ -30,6 +33,7 @@ public class Server {
       this.authService = new AuthService(new AuthDAOSQL());
       this.userService = new UserService(new UserDAOSQL());
       this.gameService = new GameService(new GameDAOSQL());
+      webSocketHandler = new WebSocketHandler();
     } catch (DataAccessException e) {
       System.out.println("Unable to instantiate Server");
     }
@@ -46,6 +50,8 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
+        Spark.webSocket("/connect", webSocketHandler);
+
         Spark.delete("/db", this::clearHandler);
         Spark.post("/user", this::registerHandler);
         Spark.post("/session", this::loginHandler);

@@ -209,7 +209,7 @@ public class WebSocketHandler {
       String message = String.format("%s joined the game \"%s\" as an observer.", authenticatedUser.username(), authenticatedGame.gameName());
       Notification notification = new Notification(message);
       connections.broadcast(command.getAuthString(), notification, authenticatedGame.gameID());
-      session.getRemote().sendString(new Gson().toJson(new LoadGame(new GameData(1, null, null, null, null))));
+      session.getRemote().sendString(new Gson().toJson(new LoadGame(authenticatedGame)));
     } catch (DataAccessException e) {
       sendError(session, "Error occurred trying to join game as observer.");
     } catch (IOException e) {
@@ -232,7 +232,7 @@ public class WebSocketHandler {
       String message = String.format("%s joined the game \"%s\" as the %s player.", authenticatedUser.username(), authenticatedGame.gameName(), command.getPlayerColor());
       Notification notification = new Notification(message);
       connections.broadcast(command.getAuthString(), notification, authenticatedGame.gameID());
-      session.getRemote().sendString(new Gson().toJson(new LoadGame(new GameData(1, null, null, null, null))));
+      session.getRemote().sendString(new Gson().toJson(new LoadGame(authenticatedGame)));
     } catch (DataAccessException e) {
       sendError(session, "Error occurred trying to join game as player.");
     } catch (ResponseException e) {

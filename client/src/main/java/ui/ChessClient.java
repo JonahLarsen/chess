@@ -1,9 +1,12 @@
 package ui;
 
+import chess.ChessGame;
 import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import websocket.NotificationHandler;
+import websocket.WebSocketFacade;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,18 +15,22 @@ import static ui.ChessBoard.drawChessBoard;
 
 public class ChessClient {
   private final ServerFacade server;
+  private  WebSocketFacade socket;
   private final String serverURL;
   private State state = State.SIGNEDOUT;
   private AuthData currentUser;
   private HashMap<Integer, Integer> idMap= new HashMap<>();
+  private final NotificationHandler notificationHandler;
   public enum State {
     SIGNEDOUT,
-    SIGNEDIN
+    SIGNEDIN,
+    INGAME
   }
 
-  public ChessClient(String url) {
+  public ChessClient(String url, NotificationHandler notificationHandler) {
     server = new ServerFacade(url);
     serverURL = url;
+    this.notificationHandler = notificationHandler;
   }
 
 
@@ -114,15 +121,26 @@ public class ChessClient {
     }
     int gameListID=Integer.parseInt(params[0]);
     int gameID =idMap.get(gameListID);
+    String playerColorString;
     if (params.length > 1) {
-      server.joinGame(gameID, params[1].toUpperCase(), currentUser);
+      playerColorString = params[1].toUpperCase();
+      server.joinGame(gameID, playerColorString, currentUser);
     } else {
+      playerColorString = null;
       server.joinGame(gameID, null, currentUser);
+      state = State.INGAME;
     }
-    chess.ChessBoard board = new chess.ChessBoard();
-    board.resetBoard();
-    drawChessBoard(board, "BLACK");
-    drawChessBoard(board, "WHITE");
+    if (playerColorString == "BLACK") {
+      socket = new WebSocketFacade(serverURL, notificationHandler, ChessGame.TeamColor.BLACK);
+    } else if (playerColorString == "WHITE") {
+      socket = new WebSocketFacade(serverURL, notificationHandler, ChessGame.TeamColor.WHITE);
+    } else {
+      socket = new WebSocketFacade(serverURL, notificationHandler, null);
+    }
+
+    socket.joinGame(currentUser.authToken(), gameID);
+
+
     return "Successfully Joined Game";
   }
 
@@ -137,12 +155,21 @@ public class ChessClient {
               'joinGame <ID> [WHITE|BLACK|<empty>]' - Join a Chess game
               'observe <ID>' Observe a Chess game
               """;
-    } else {
+    } else if (state.equals(State.SIGNEDOUT)) {
       return """
               'help' - List available commands
               'quit' - Exit the Chess program
               'login <USERNAME> <PASSWORD>' - Login to Chess account
               'register <USERNAME> <PASSWORD> <EMAIL>' - Create a Chess account
+              """;
+    } else {
+      return """
+              'help' - List available commands
+              'redraw' - Redraw the chess board
+              'leave' - Leave the game
+              'makemove <STARTING_POSITION> <NEW_POSITION>' - Move piece at starting position to new position
+              'resign' - Resign from game
+              'highlight <STARTING_POSITION>' - Highlights available moves for piece at starting position
               """;
     }
   }
@@ -156,6 +183,12 @@ public class ChessClient {
   private void assertSignedOut() throws ResponseException {
     if (state == State.SIGNEDIN) {
       throw new ResponseException("Already signed in");
+    }
+  }
+
+  private void assertInGame() throws ResponseException {
+    if (state == State.INGAME) {
+      throw new ResponseException("Player is in game");
     }
   }
 }

@@ -27,6 +27,7 @@ public class ChessBoard {
   }
 
   public static void drawChessBoard(chess.ChessBoard board, String color) {
+    System.out.println();
     var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
     String[] header;

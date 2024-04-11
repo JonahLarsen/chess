@@ -68,7 +68,7 @@ public class WebSocketHandler {
               gameRep, authenticatedGame.gameID());
       String message = String.format("%s resigned from the game \"%s\".", authenticatedUser.username(), authenticatedGame.gameName());
       Notification notification = new Notification(message);
-      connections.broadcast("", notification);
+      connections.broadcast("", notification, authenticatedGame.gameID());
     } catch (DataAccessException e) {
       sendError(session, "Error: Cannot resign from game with provided credentials");
     } catch (IOException e) {
@@ -97,7 +97,7 @@ public class WebSocketHandler {
       connections.remove(command.getAuthString());
       String message = String.format("%s left the game \"%s\".", authenticatedUser.username(), authenticatedGame.gameName());
       Notification notification = new Notification(message);
-      connections.broadcast(command.getAuthString(), notification);
+      connections.broadcast(command.getAuthString(), notification, authenticatedGame.gameID());
     } catch (DataAccessException e) {
       sendError(session, "Error: Unable to remove user with provided credentials from game.");
     } catch (IOException e) {
@@ -128,8 +128,8 @@ public class WebSocketHandler {
               authenticatedUser.username(), gameRep.getBoard().getPiece(move.getEndPosition()).getPieceType().toString(),
               move.getStartPosition().toString(), move.getEndPosition().toString());
       Notification notification = new Notification(message);
-      connections.broadcast(authenticatedUser.authToken(), notification);
-      connections.broadcast("", new LoadGame(authenticatedGame));
+      connections.broadcast(authenticatedUser.authToken(), notification, authenticatedGame.gameID());
+      connections.broadcast("", new LoadGame(authenticatedGame), authenticatedGame.gameID());
     } catch (DataAccessException e) {
       sendError(session, "Error: It is not your turn.");
     } catch (InvalidMoveException e) {
@@ -162,10 +162,10 @@ public class WebSocketHandler {
       if (authenticatedGame == null) {
         throw new DataAccessException("error", 500);
       }
-      connections.add(authenticatedUser.authToken(), session);
+      connections.add(authenticatedUser.authToken(), session, command.getGameID());
       String message = String.format("%s joined the game \"%s\" as an observer.", authenticatedUser.username(), authenticatedGame.gameName());
       Notification notification = new Notification(message);
-      connections.broadcast(command.getAuthString(), notification);
+      connections.broadcast(command.getAuthString(), notification, authenticatedGame.gameID());
       session.getRemote().sendString(new Gson().toJson(new LoadGame(new GameData(1, null, null, null, null))));
     } catch (DataAccessException e) {
       sendError(session, "Error occurred trying to join game as observer.");
@@ -185,10 +185,10 @@ public class WebSocketHandler {
         || (command.getPlayerColor() == ChessGame.TeamColor.WHITE && (authenticatedGame.whiteUsername() == null || !authenticatedGame.whiteUsername().equals(authenticatedUser.username())))) {
         throw new ResponseException(500, "error");
       }
-      connections.add(command.getAuthString(), session);
+      connections.add(command.getAuthString(), session, command.getGameID());
       String message = String.format("%s joined the game \"%s\" as the %s player.", authenticatedUser.username(), authenticatedGame.gameName(), command.getPlayerColor());
       Notification notification = new Notification(message);
-      connections.broadcast(command.getAuthString(), notification);
+      connections.broadcast(command.getAuthString(), notification, authenticatedGame.gameID());
       session.getRemote().sendString(new Gson().toJson(new LoadGame(new GameData(1, null, null, null, null))));
     } catch (DataAccessException e) {
       sendError(session, "Error occurred trying to join game as player.");

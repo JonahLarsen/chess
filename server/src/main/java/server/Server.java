@@ -87,9 +87,7 @@ public class Server {
       String authToken = req.headers("authorization");
       this.authService.getAuth(authToken);
       JoinGameObject joinGame = new Gson().fromJson(req.body(), JoinGameObject.class);
-      if (joinGame.playerColor() == null) {
-        //TODO: Add player as watcher
-      } else if (!joinGame.playerColor().equals("BLACK") && !joinGame.playerColor().equals("WHITE")) {
+      if (joinGame.playerColor() != null && !joinGame.playerColor().equals("BLACK") && !joinGame.playerColor().equals("WHITE")) {
         throw new DataAccessException("Error", 400);
       }
       String username = this.authService.getAuth(authToken).username();

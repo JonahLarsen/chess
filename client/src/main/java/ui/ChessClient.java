@@ -28,7 +28,8 @@ public class ChessClient {
   public enum State {
     SIGNEDOUT,
     SIGNEDIN,
-    INGAME
+    INGAME,
+    RESIGN
   }
 
   public ChessClient(String url, NotificationHandler notificationHandler) {
@@ -52,6 +53,9 @@ public class ChessClient {
         case "listgames" -> listGames();
         case "joingame", "observe" -> joinGame(params);
         case "leave" -> leave();
+        case "resign" -> resign();
+        case "confirm" -> confirmResign();
+        case "cancel" -> cancelResign();
         default -> help();
       };
     } catch (ResponseException e) {
@@ -59,14 +63,27 @@ public class ChessClient {
     }
   }
 
-  public void resign() {
-
+  public String cancelResign() throws ResponseException {
+    assertResign();
+    state = State.INGAME;
+    return "Resign cancelled";
+  }
+  public String confirmResign() throws ResponseException {
+    assertResign();
+    socket.resign(currentUser.authToken(), currentGameID);
+    return "";
+  }
+  public String resign() throws ResponseException {
+    assertInGame();
+    state = State.RESIGN;
+    return "Are you sure you want to resign? Type 'confirm' if yes or 'cancel' if not.";
   }
 
-  public void leave() throws ResponseException {
+  public String leave() throws ResponseException {
     assertInGame();
     state = State.SIGNEDIN;
     socket.leave(currentUser.authToken(), currentGameID);
+    return "";
   }
   public String login(String... params) throws ResponseException {
     assertSignedOut();
@@ -177,7 +194,7 @@ public class ChessClient {
               'login <USERNAME> <PASSWORD>' - Login to Chess account
               'register <USERNAME> <PASSWORD> <EMAIL>' - Create a Chess account
               """;
-    } else {
+    } else if (state.equals(State.INGAME)) {
       return """
               'help' - List available commands
               'redraw' - Redraw the chess board
@@ -186,12 +203,23 @@ public class ChessClient {
               'resign' - Resign from game
               'highlight <STARTING_POSITION>' - Highlights available moves for piece at starting position
               """;
+    } else {
+      return """
+              'confirm' - Confirm that you want to resign
+              'cancel' - Cancel your resign
+              """;
     }
   }
 
   private void assertSignedIn() throws ResponseException {
     if (state == State.SIGNEDOUT) {
       throw new ResponseException("You must sign in");
+    }
+  }
+
+  private void assertResign() throws ResponseException {
+    if (state != State.RESIGN) {
+      throw new ResponseException("Request to resign first");
     }
   }
 

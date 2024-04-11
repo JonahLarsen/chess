@@ -11,6 +11,7 @@ import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.JoinObserver;
 import webSocketMessages.userCommands.JoinPlayer;
 import webSocketMessages.userCommands.Leave;
+import webSocketMessages.userCommands.Resign;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -59,15 +60,21 @@ public class WebSocketFacade extends Endpoint {
       throw new ResponseException(ex.getMessage());
     }
   }
-
-
+  public void resign(String authToken, int gameID) throws ResponseException {
+    try {
+      Resign message = new Resign(authToken, gameID);
+      this.session.getBasicRemote().sendText(new Gson().toJson(message));
+    } catch (IOException e) {
+      throw new ResponseException(e.getMessage());
+    }
+  }
   public void leave(String authToken, int gameID) throws ResponseException {
     try {
       Leave message = new Leave(authToken, gameID);
       this.session.getBasicRemote().sendText(new Gson().toJson(message));
       this.session.close();
-    } catch (IOException ex) {
-      throw new ResponseException(ex.getMessage());
+    } catch (IOException e) {
+      throw new ResponseException(e.getMessage());
     }
   }
   public void joinGame(String authToken, int gameID) throws ResponseException {

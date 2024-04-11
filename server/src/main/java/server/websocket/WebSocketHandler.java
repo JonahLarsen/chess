@@ -22,7 +22,7 @@ public class WebSocketHandler {
 //    joinObserver(new Gson().fromJson(message, JoinObserver.class), session);
     switch (command.getCommandType()) {
       case JOIN_OBSERVER -> joinObserver(new Gson().fromJson(message, JoinObserver.class), session);
-//      case JOIN_PLAYER -> exit(action.visitorName());
+      case JOIN_PLAYER -> joinPlayer(new Gson().fromJson(message, JoinObserver.class), session);
 //      case LEAVE -> return;
 //      case MAKE_MOVE -> return;
 
@@ -41,5 +41,17 @@ public class WebSocketHandler {
       return;
     }
 
+  }
+
+  public void joinPlayer(JoinObserver command, Session session) {
+    try {
+      connections.add(command.getAuthString(), session);
+      String message = String.format("woohoo");
+      Notification notification = new Notification(message);
+      connections.broadcast(command.getAuthString(), notification);
+      session.getRemote().sendString(new Gson().toJson(new LoadGame(new GameData(1, null, null, null, null))));
+    } catch (Throwable e) {
+      return;
+    }
   }
 }

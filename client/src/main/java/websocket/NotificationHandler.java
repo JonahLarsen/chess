@@ -1,5 +1,5 @@
 package websocket;
 
 public interface NotificationHandler {
-  void notify(Notification notification);
+  void notify(String string);
 }

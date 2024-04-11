@@ -43,4 +43,8 @@ public class GameDAOMemory implements GameDAO {
   public Collection<GameData> listGames() throws DataAccessException {
     return this.games.values();
   }
+
+  public GameData getGame(int gameID) {
+    return games.get(gameID);
+  }
 }

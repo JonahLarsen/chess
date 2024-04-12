@@ -84,7 +84,7 @@ public class ChessClient {
     if (params.length != 2) {
       throw new ResponseException("Error: Expected highlight <STARTING_POSITION>");
     }
-    return ""
+    return "";
   }
 
   public String makemove(String... params) throws ResponseException {

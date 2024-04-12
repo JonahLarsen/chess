@@ -50,8 +50,10 @@ public class WebSocketFacade extends Endpoint {
             currentBoard = loadGameMessage.getGame().game().getBoard();
             if (teamColor == ChessGame.TeamColor.BLACK) {
               ChessBoard.drawChessBoard(currentBoard, "BLACK" );
+              notificationHandler.printPrompt();
             } else {
               ChessBoard.drawChessBoard(currentBoard,"WHITE");
+              notificationHandler.printPrompt();
             }
 
           }

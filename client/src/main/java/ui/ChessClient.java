@@ -71,11 +71,20 @@ public class ChessClient {
         case "cancel" -> cancelResign();
         case "redraw" -> redraw();
         case "makemove" -> makemove(params);
+        case "highlight" ->
         default -> help();
       };
     } catch (ResponseException e) {
       return e.getMessage();
     }
+  }
+
+  public String highlight(String... params) throws ResponseException{
+    assertInGame();
+    if (params.length != 2) {
+      throw new ResponseException("Error: Expected highlight <STARTING_POSITION>");
+    }
+
   }
 
   public String makemove(String... params) throws ResponseException {
@@ -89,7 +98,7 @@ public class ChessClient {
     int endRow = Integer.parseInt(params[3]);
     ChessPiece.PieceType promotionType;
     if ((endRow == 8 && playerColorString.equals("WHITE")) || (endRow == 1 && playerColorString.equals("BLACK")) ) {
-      promotionType = ChessPiece.PieceType.valueOf(params[4]);
+      promotionType = ChessPiece.PieceType.valueOf(params[4].toUpperCase());
     } else {
       promotionType = null;
     }
@@ -239,9 +248,9 @@ public class ChessClient {
               'help' - List available commands
               'redraw' - Redraw the chess board
               'leave' - Leave the game
-              'makemove <STARTING_POSITION> <NEW_POSITION> [PROMOTION_PIECE]' - Move piece at starting position to new position (Moves should follow patter: b 5). Only include promotion piece if valid. 
+              'makemove <STARTING_POSITION> <NEW_POSITION> [PROMOTION_PIECE]' - Move piece at starting position to new position (Positions should follow patter: b 5). Only include promotion piece if valid. 
               'resign' - Resign from game
-              'highlight <STARTING_POSITION>' - Highlights available moves for piece at starting position
+              'highlight <STARTING_POSITION>' - Highlights available moves for piece at starting position (Positions should follow patter: b 5)
               """;
     } else {
       return """

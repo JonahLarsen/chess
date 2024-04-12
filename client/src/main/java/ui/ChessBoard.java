@@ -59,25 +59,32 @@ public class ChessBoard {
   private static void drawBoard(PrintStream out, String[] column, chess.ChessBoard board, String color) {
     if (color.equals("WHITE")) {
       for (int i = BOARD_SQUARES_LENGTH - 3; i >= 0; i--) {
-        drawRow(out, column, board, i);
+        drawRow(out, column, board, i, color);
         setTerminalColors(out);
         out.println();
       }
     } else {
       for (int i = 0; i < BOARD_SQUARES_LENGTH - 2; i++) {
-        drawRow(out, column, board, i);
+        drawRow(out, column, board, i, color);
         setTerminalColors(out);
         out.println();
       }
     }
   }
 
-  private static void drawRow(PrintStream out, String[] column, chess.ChessBoard board, int rowIndex) {
+  private static void drawRow(PrintStream out, String[] column, chess.ChessBoard board, int rowIndex, String color) {
     setBorderColors(out);
     drawSpace(out, column[rowIndex]);
     boolean isWhiteSpace = rowIndex % 2 == 1;
-
-    int columnIndex = 1;
+    int columnIndex;
+    int increment;
+    if (color.equals("WHITE")) {
+      columnIndex = 1;
+      increment = 1;
+    } else {
+      columnIndex = 8;
+      increment = -1;
+    }
     ChessPosition tempPosition = new ChessPosition(rowIndex + 1, columnIndex);
     ChessPiece tempPiece;
       for (int i = 0; i < BOARD_SQUARES_LENGTH - 2; i++) {
@@ -117,7 +124,7 @@ public class ChessBoard {
               drawSpace(out, BLACK_KING);
           }
         }
-        columnIndex++;
+        columnIndex = columnIndex + increment;
         tempPosition = new ChessPosition(rowIndex + 1, columnIndex);
       }
     setBorderColors(out);

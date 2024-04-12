@@ -1,6 +1,8 @@
 package websocket;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import ui.ChessBoard;
@@ -8,10 +10,7 @@ import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
-import webSocketMessages.userCommands.JoinObserver;
-import webSocketMessages.userCommands.JoinPlayer;
-import webSocketMessages.userCommands.Leave;
-import webSocketMessages.userCommands.Resign;
+import webSocketMessages.userCommands.*;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -60,6 +59,15 @@ public class WebSocketFacade extends Endpoint {
       });
     } catch (DeploymentException | IOException | URISyntaxException ex) {
       throw new ResponseException(ex.getMessage());
+    }
+  }
+
+  public void makeMove(String authToken, int gameID, ChessMove move) throws ResponseException {
+    try {
+      MakeMove moveMessage = new MakeMove(authToken, gameID,move);
+      this.session.getBasicRemote().sendText(new Gson().toJson(moveMessage));
+    } catch (IOException e) {
+      throw new ResponseException(e.getMessage());
     }
   }
 

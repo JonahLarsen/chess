@@ -1,6 +1,9 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import model.AuthData;
@@ -26,6 +29,7 @@ public class ChessClient {
   private int currentGameID;
   private final NotificationHandler notificationHandler;
   private String playerColorString;
+  private final HashMap<String, Integer> boardLetterMap = new HashMap<>();
   public enum State {
     SIGNEDOUT,
     SIGNEDIN,
@@ -37,6 +41,14 @@ public class ChessClient {
     server = new ServerFacade(url);
     serverURL = url;
     this.notificationHandler = notificationHandler;
+    boardLetterMap.put("a", 1);
+    boardLetterMap.put("b", 2);
+    boardLetterMap.put("c", 3);
+    boardLetterMap.put("d", 4);
+    boardLetterMap.put("e", 5);
+    boardLetterMap.put("f", 6);
+    boardLetterMap.put("g", 7);
+    boardLetterMap.put("h", 8);
   }
 
 
@@ -58,6 +70,7 @@ public class ChessClient {
         case "confirm" -> confirmResign();
         case "cancel" -> cancelResign();
         case "redraw" -> redraw();
+        case "makemove" -> makemove(params);
         default -> help();
       };
     } catch (ResponseException e) {
@@ -65,6 +78,27 @@ public class ChessClient {
     }
   }
 
+  public String makemove(String... params) throws ResponseException {
+    assertInGame();
+    if (params.length < 4) {
+      throw new ResponseException("Error: Expected makemove <STARTING_POSITION> <NEW_POSITION>");
+    }
+    int startColumn = boardLetterMap.get(params[0]);
+    int startRow = Integer.parseInt(params[1]);
+    int endColumn = boardLetterMap.get(params[2]);
+    int endRow = Integer.parseInt(params[3]);
+    ChessPiece.PieceType promotionType;
+    if ((endRow == 8 && playerColorString.equals("WHITE")) || (endRow == 1 && playerColorString.equals("BLACK")) ) {
+      promotionType = ChessPiece.PieceType.valueOf(params[4]);
+    } else {
+      promotionType = null;
+    }
+    ChessPosition startPosition = new ChessPosition(startRow, startColumn);
+    ChessPosition endPosition = new ChessPosition(endRow, endColumn);
+    ChessMove move = new ChessMove(startPosition, endPosition, promotionType);
+    socket.makeMove(currentUser.authToken(),currentGameID, move);
+    return "";
+  }
   public String redraw() throws ResponseException{
     assertInGame();
     socket.redraw(playerColorString);
@@ -205,7 +239,7 @@ public class ChessClient {
               'help' - List available commands
               'redraw' - Redraw the chess board
               'leave' - Leave the game
-              'makemove <STARTING_POSITION> <NEW_POSITION>' - Move piece at starting position to new position
+              'makemove <STARTING_POSITION> <NEW_POSITION> [PROMOTION_PIECE]' - Move piece at starting position to new position (Moves should follow patter: b 5). Only include promotion piece if valid. 
               'resign' - Resign from game
               'highlight <STARTING_POSITION>' - Highlights available moves for piece at starting position
               """;

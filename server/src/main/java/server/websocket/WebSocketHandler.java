@@ -134,24 +134,23 @@ public class WebSocketHandler {
       connections.broadcast(authenticatedUser.authToken(), notification, authenticatedGame.gameID());
       connections.broadcast("", new LoadGame(authenticatedGame), authenticatedGame.gameID());
 
-      if (gameRep.isInCheck(BLACK)) {
-        String notif = String.format("The Black Team played by %s is in check.", authenticatedGame.blackUsername());
-        Notification notify = new Notification(notif);
-        connections.broadcast("", notify, authenticatedGame.gameID());
-      } else if (gameRep.isInCheckmate(BLACK)) {
+        if (gameRep.isInCheckmate(BLACK)) {
         String notif = String.format("The Black Team played by %s is in checkmate. %s wins!", authenticatedGame.blackUsername(), authenticatedGame.whiteUsername());
         Notification notify = new Notification(notif);
         connections.broadcast("", notify, authenticatedGame.gameID());
-
-      } else if (gameRep.isInCheck(WHITE)) {
-        String notif = String.format("The White Team played by %s is in check.", authenticatedGame.whiteUsername());
+      } else if (gameRep.isInCheck(BLACK)) {
+        String notif = String.format("The Black Team played by %s is in check.", authenticatedGame.blackUsername());
         Notification notify = new Notification(notif);
         connections.broadcast("", notify, authenticatedGame.gameID());
-        gameRep.setTeamTurn(ChessGame.TeamColor.NIL);
-        gameDAO.updateGame(authenticatedGame.whiteUsername(), authenticatedGame.blackUsername(),
-                gameRep, authenticatedGame.gameID());
       } else if (gameRep.isInCheckmate(WHITE)) {
-        String notif = String.format("The Black Team played by %s is in check.", authenticatedGame.blackUsername());
+          String notif = String.format("The Black Team played by %s is in check.", authenticatedGame.blackUsername());
+          Notification notify = new Notification(notif);
+          connections.broadcast("", notify, authenticatedGame.gameID());
+          gameRep.setTeamTurn(ChessGame.TeamColor.NIL);
+          gameDAO.updateGame(authenticatedGame.whiteUsername(), authenticatedGame.blackUsername(),
+                  gameRep, authenticatedGame.gameID());
+        } else if (gameRep.isInCheck(WHITE)) {
+        String notif = String.format("The White Team played by %s is in check.", authenticatedGame.whiteUsername());
         Notification notify = new Notification(notif);
         connections.broadcast("", notify, authenticatedGame.gameID());
         gameRep.setTeamTurn(ChessGame.TeamColor.NIL);

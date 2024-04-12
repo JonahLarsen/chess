@@ -121,6 +121,7 @@ public class ChessClient {
   }
   public String confirmResign() throws ResponseException {
     assertResign();
+    state = State.INGAME;
     socket.resign(currentUser.authToken(), currentGameID);
     return "";
   }

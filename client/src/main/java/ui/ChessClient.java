@@ -71,7 +71,7 @@ public class ChessClient {
         case "cancel" -> cancelResign();
         case "redraw" -> redraw();
         case "makemove" -> makemove(params);
-        case "highlight" ->
+        case "highlight" -> highlight();
         default -> help();
       };
     } catch (ResponseException e) {
@@ -84,7 +84,7 @@ public class ChessClient {
     if (params.length != 2) {
       throw new ResponseException("Error: Expected highlight <STARTING_POSITION>");
     }
-
+    return ""
   }
 
   public String makemove(String... params) throws ResponseException {

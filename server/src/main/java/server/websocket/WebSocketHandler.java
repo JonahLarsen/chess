@@ -138,6 +138,9 @@ public class WebSocketHandler {
         String notif = String.format("The Black Team played by %s is in checkmate. %s wins!", authenticatedGame.blackUsername(), authenticatedGame.whiteUsername());
         Notification notify = new Notification(notif);
         connections.broadcast("", notify, authenticatedGame.gameID());
+        gameRep.setTeamTurn(ChessGame.TeamColor.NIL);
+        gameDAO.updateGame(authenticatedGame.whiteUsername(), authenticatedGame.blackUsername(),
+                gameRep, authenticatedGame.gameID());
       } else if (gameRep.isInCheck(BLACK)) {
         String notif = String.format("The Black Team played by %s is in check.", authenticatedGame.blackUsername());
         Notification notify = new Notification(notif);
@@ -153,9 +156,6 @@ public class WebSocketHandler {
         String notif = String.format("The White Team played by %s is in check.", authenticatedGame.whiteUsername());
         Notification notify = new Notification(notif);
         connections.broadcast("", notify, authenticatedGame.gameID());
-        gameRep.setTeamTurn(ChessGame.TeamColor.NIL);
-        gameDAO.updateGame(authenticatedGame.whiteUsername(), authenticatedGame.blackUsername(),
-                gameRep, authenticatedGame.gameID());
       } else if (gameRep.isInStalemate(BLACK)) {
         String notif = String.format("The Black Team played by %s is in stalemate. %s wins!", authenticatedGame.blackUsername(), authenticatedGame.whiteUsername());
         Notification notify = new Notification(notif);
